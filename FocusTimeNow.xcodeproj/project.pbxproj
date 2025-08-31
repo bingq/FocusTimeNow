@@ -3,36 +3,40 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A12345671234567890123456 /* FocusTimeNowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123455 /* FocusTimeNowApp.swift */; };
-		A12345671234567890123458 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123457 /* ContentView.swift */; };
-		A12345671234567890123460 /* ActivityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123459 /* ActivityEvent.swift */; };
-		A12345671234567890123462 /* ActivityCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123461 /* ActivityCategory.swift */; };
-		A12345671234567890123464 /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123463 /* TimelineViewModel.swift */; };
-		A12345671234567890123466 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123465 /* TimelineView.swift */; };
-		A12345671234567890123468 /* EditActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123467 /* EditActivityView.swift */; };
-		A12345671234567890123470 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123469 /* Assets.xcassets */; };
-		A12345671234567890123472 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A12345671234567890123471 /* Preview Assets.xcassets */; };
+		FA1234567890123456789001 /* FocusTimeNowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789002 /* FocusTimeNowApp.swift */; };
+		FA1234567890123456789003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789004 /* ContentView.swift */; };
+		FA1234567890123456789005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789006 /* Assets.xcassets */; };
+		FA1234567890123456789007 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789008 /* Preview Assets.xcassets */; };
+		FA1234567890123456789009 /* ActivityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789010 /* ActivityEvent.swift */; };
+		FA1234567890123456789011 /* ActivityCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789012 /* ActivityCategory.swift */; };
+		FA1234567890123456789013 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789014 /* Project.swift */; };
+		FA1234567890123456789015 /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789016 /* TimelineViewModel.swift */; };
+		FA1234567890123456789017 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789018 /* TimelineView.swift */; };
+		FA1234567890123456789019 /* EditActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789020 /* EditActivityView.swift */; };
+		FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789022 /* ProjectSelectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A12345671234567890123452 /* FocusTimeNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusTimeNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A12345671234567890123455 /* FocusTimeNowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusTimeNowApp.swift; sourceTree = "<group>"; };
-		A12345671234567890123457 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A12345671234567890123459 /* ActivityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEvent.swift; sourceTree = "<group>"; };
-		A12345671234567890123461 /* ActivityCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCategory.swift; sourceTree = "<group>"; };
-		A12345671234567890123463 /* TimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = "<group>"; };
-		A12345671234567890123465 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
-		A12345671234567890123467 /* EditActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityView.swift; sourceTree = "<group>"; };
-		A12345671234567890123469 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A12345671234567890123471 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FA1234567890123456789000 /* FocusTimeNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusTimeNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA1234567890123456789002 /* FocusTimeNowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusTimeNowApp.swift; sourceTree = "<group>"; };
+		FA1234567890123456789004 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FA1234567890123456789006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA1234567890123456789008 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FA1234567890123456789010 /* ActivityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEvent.swift; sourceTree = "<group>"; };
+		FA1234567890123456789012 /* ActivityCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCategory.swift; sourceTree = "<group>"; };
+		FA1234567890123456789014 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		FA1234567890123456789016 /* TimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = "<group>"; };
+		FA1234567890123456789018 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		FA1234567890123456789020 /* EditActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityView.swift; sourceTree = "<group>"; };
+		FA1234567890123456789022 /* ProjectSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A12345671234567890123449 /* Frameworks */ = {
+		FA1234567890123456789023 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -42,161 +46,161 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A12345671234567890123443 = {
+		FA1234567890123456789024 = {
 			isa = PBXGroup;
 			children = (
-				A12345671234567890123454 /* FocusTimeNow */,
-				A12345671234567890123453 /* Products */,
+				FA1234567890123456789025 /* FocusTimeNow */,
+				FA1234567890123456789026 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A12345671234567890123453 /* Products */ = {
+		FA1234567890123456789025 /* FocusTimeNow */ = {
 			isa = PBXGroup;
 			children = (
-				A12345671234567890123452 /* FocusTimeNow.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		A12345671234567890123454 /* FocusTimeNow */ = {
-			isa = PBXGroup;
-			children = (
-				A12345671234567890123455 /* FocusTimeNowApp.swift */,
-				A12345671234567890123457 /* ContentView.swift */,
-				A12345671234567890123474 /* Models */,
-				A12345671234567890123475 /* ViewModels */,
-				A12345671234567890123476 /* Views */,
-				A12345671234567890123469 /* Assets.xcassets */,
-				A12345671234567890123473 /* Preview Content */,
+				FA1234567890123456789002 /* FocusTimeNowApp.swift */,
+				FA1234567890123456789004 /* ContentView.swift */,
+				FA1234567890123456789027 /* Models */,
+				FA1234567890123456789028 /* ViewModels */,
+				FA1234567890123456789029 /* Views */,
+				FA1234567890123456789006 /* Assets.xcassets */,
+				FA1234567890123456789030 /* Preview Content */,
 			);
 			path = FocusTimeNow;
 			sourceTree = "<group>";
 		};
-		A12345671234567890123473 /* Preview Content */ = {
+		FA1234567890123456789026 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A12345671234567890123471 /* Preview Assets.xcassets */,
+				FA1234567890123456789000 /* FocusTimeNow.app */,
 			);
-			path = "Preview Content";
+			name = Products;
 			sourceTree = "<group>";
 		};
-		A12345671234567890123474 /* Models */ = {
+		FA1234567890123456789027 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				A12345671234567890123459 /* ActivityEvent.swift */,
-				A12345671234567890123461 /* ActivityCategory.swift */,
+				FA1234567890123456789010 /* ActivityEvent.swift */,
+				FA1234567890123456789012 /* ActivityCategory.swift */,
+				FA1234567890123456789014 /* Project.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		A12345671234567890123475 /* ViewModels */ = {
+		FA1234567890123456789028 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				A12345671234567890123463 /* TimelineViewModel.swift */,
+				FA1234567890123456789016 /* TimelineViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		A12345671234567890123476 /* Views */ = {
+		FA1234567890123456789029 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A12345671234567890123465 /* TimelineView.swift */,
-				A12345671234567890123467 /* EditActivityView.swift */,
+				FA1234567890123456789018 /* TimelineView.swift */,
+				FA1234567890123456789020 /* EditActivityView.swift */,
+				FA1234567890123456789022 /* ProjectSelectionView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		FA1234567890123456789030 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FA1234567890123456789008 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A12345671234567890123451 /* FocusTimeNow */ = {
+		FA1234567890123456789031 /* FocusTimeNow */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A12345671234567890123481 /* Build configuration list for PBXNativeTarget "FocusTimeNow" */;
+			buildConfigurationList = FA1234567890123456789032 /* Build configuration list for PBXNativeTarget "FocusTimeNow" */;
 			buildPhases = (
-				A12345671234567890123448 /* Sources */,
-				A12345671234567890123449 /* Frameworks */,
-				A12345671234567890123450 /* Resources */,
+				FA1234567890123456789033 /* Sources */,
+				FA1234567890123456789023 /* Frameworks */,
+				FA1234567890123456789034 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = FocusTimeNow;
-			packageProductDependencies = (
-			);
 			productName = FocusTimeNow;
-			productReference = A12345671234567890123452 /* FocusTimeNow.app */;
+			productReference = FA1234567890123456789000 /* FocusTimeNow.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A12345671234567890123444 /* Project object */ = {
+		FA1234567890123456789035 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					A12345671234567890123451 = {
-						CreatedOnToolsVersion = 15.4;
+					FA1234567890123456789031 = {
+						CreatedOnToolsVersion = 15.0;
 					};
 				};
 			};
-			buildConfigurationList = A12345671234567890123447 /* Build configuration list for PBXProject "FocusTimeNow" */;
+			buildConfigurationList = FA1234567890123456789036 /* Build configuration list for PBXProject "FocusTimeNow" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = A12345671234567890123443;
-			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
-			productRefGroup = A12345671234567890123453 /* Products */;
+			mainGroup = FA1234567890123456789024;
+			productRefGroup = FA1234567890123456789026 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A12345671234567890123451 /* FocusTimeNow */,
+				FA1234567890123456789031 /* FocusTimeNow */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A12345671234567890123450 /* Resources */ = {
+		FA1234567890123456789034 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A12345671234567890123472 /* Preview Assets.xcassets in Resources */,
-				A12345671234567890123470 /* Assets.xcassets in Resources */,
+				FA1234567890123456789007 /* Preview Assets.xcassets in Resources */,
+				FA1234567890123456789005 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A12345671234567890123448 /* Sources */ = {
+		FA1234567890123456789033 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A12345671234567890123458 /* ContentView.swift in Sources */,
-				A12345671234567890123460 /* ActivityEvent.swift in Sources */,
-				A12345671234567890123462 /* ActivityCategory.swift in Sources */,
-				A12345671234567890123464 /* TimelineViewModel.swift in Sources */,
-				A12345671234567890123466 /* TimelineView.swift in Sources */,
-				A12345671234567890123468 /* EditActivityView.swift in Sources */,
-				A12345671234567890123456 /* FocusTimeNowApp.swift in Sources */,
+				FA1234567890123456789003 /* ContentView.swift in Sources */,
+				FA1234567890123456789009 /* ActivityEvent.swift in Sources */,
+				FA1234567890123456789011 /* ActivityCategory.swift in Sources */,
+				FA1234567890123456789013 /* Project.swift in Sources */,
+				FA1234567890123456789015 /* TimelineViewModel.swift in Sources */,
+				FA1234567890123456789017 /* TimelineView.swift in Sources */,
+				FA1234567890123456789019 /* EditActivityView.swift in Sources */,
+				FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */,
+				FA1234567890123456789001 /* FocusTimeNowApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A12345671234567890123477 /* Debug */ = {
+		FA1234567890123456789037 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -229,8 +233,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -245,21 +248,19 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		A12345671234567890123478 /* Release */ = {
+		FA1234567890123456789038 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -292,8 +293,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -302,20 +302,20 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		A12345671234567890123479 /* Debug */ = {
+		FA1234567890123456789039 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FocusTimeNow/Preview Content\"";
@@ -331,7 +331,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.focustimenow.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.focustime.FocusTimeNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -339,11 +339,11 @@
 			};
 			name = Debug;
 		};
-		A12345671234567890123480 /* Release */ = {
+		FA1234567890123456789040 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FocusTimeNow/Preview Content\"";
@@ -359,7 +359,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.focustimenow.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.focustime.FocusTimeNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -370,25 +370,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A12345671234567890123447 /* Build configuration list for PBXProject "FocusTimeNow" */ = {
+		FA1234567890123456789036 /* Build configuration list for PBXProject "FocusTimeNow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A12345671234567890123477 /* Debug */,
-				A12345671234567890123478 /* Release */,
+				FA1234567890123456789037 /* Debug */,
+				FA1234567890123456789038 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A12345671234567890123481 /* Build configuration list for PBXNativeTarget "FocusTimeNow" */ = {
+		FA1234567890123456789032 /* Build configuration list for PBXNativeTarget "FocusTimeNow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A12345671234567890123479 /* Debug */,
-				A12345671234567890123480 /* Release */,
+				FA1234567890123456789039 /* Debug */,
+				FA1234567890123456789040 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = A12345671234567890123444 /* Project object */;
+	rootObject = FA1234567890123456789035 /* Project object */;
 }

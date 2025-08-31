@@ -13,7 +13,7 @@ Allow users to record activities with minimal effort.
 
 ### Steps
 1. **Start Activity**  
-   - User taps category button (Learning, Sports, Leisure, Waste).  
+   - User taps category button (Learning, Sports, Leisure, Work, Life, Waste).  
    - App creates `ActivityEvent` (startAt=now, endAt=nil).  
 
 2. **Ongoing State**  

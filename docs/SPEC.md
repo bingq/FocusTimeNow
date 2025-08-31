@@ -105,8 +105,17 @@ A lightweight iPhone app that:
 
 ## Addendum (2025-08-24)
 - Default categories extended to: Learning, Sports, Leisure, **Work**, Waste.
+
+## Updates (2025-08-31)
+- Added **Life** category for personal/family activities (cyan color, heart.fill icon).
+- Default categories now: Learning, Sports, Leisure, Work, **Life**, Waste.
 - Optional **Projects/Goals** per category:
   - Users can create/select a Project (e.g., Learning → "Machine Learning course by Andrew Ng").
   - `ActivityEvent` gains optional `projectId: UUID?`.
   - Summaries can aggregate by category and, if present, by project.
+
+## Implementation Notes (2025-08-31)
+- **Quick Mode prioritized**: Category buttons start activities directly without project selection for minimal friction.
+- **Project functionality available**: Full Project model and ProjectSelectionView implemented but not in primary flow.
+- **Future enhancement**: Project selection can be re-enabled via EditActivityView or separate "detailed mode" if needed.
 

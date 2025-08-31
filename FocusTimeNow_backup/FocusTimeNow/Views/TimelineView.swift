@@ -6,6 +6,8 @@ struct TimelineView: View {
     @State private var viewModel = TimelineViewModel()
     @State private var showEditSheet = false
     @State private var selectedActivity: ActivityEvent?
+    @State private var showProjectSelection = false
+    @State private var selectedCategory: String = ""
     
     var body: some View {
         NavigationView {
@@ -16,7 +18,6 @@ struct TimelineView: View {
                     }
                 }
                 
-                // Activities List - Scrollable and takes remaining space
                 ScrollView {
                     LazyVStack(spacing: 8) {
                         ForEach(viewModel.activities, id: \.id) { activity in
@@ -28,14 +29,14 @@ struct TimelineView: View {
                     }
                     .padding(.horizontal)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                // Fixed Summary at bottom
+                Spacer()
+                
                 DailySummaryView(viewModel: viewModel)
                 
-                // Fixed Category buttons at bottom
                 CategoryButtonsView { category in
-                    viewModel.startActivity(category: category, projectId: nil)
+                    selectedCategory = category
+                    showProjectSelection = true
                 }
             }
             .navigationTitle("Timeline")
@@ -47,6 +48,11 @@ struct TimelineView: View {
                     EditActivityView(activity: activity) {
                         viewModel.loadTodaysActivities()
                     }
+                }
+            }
+            .sheet(isPresented: $showProjectSelection) {
+                ProjectSelectionView(category: selectedCategory) { projectId in
+                    viewModel.startActivity(category: selectedCategory, projectId: projectId)
                 }
             }
         }
@@ -177,11 +183,14 @@ struct CategoryButtonsView: View {
             }
             
             HStack(spacing: 12) {
-                ForEach(Array(ActivityCategory.defaultCategories.dropFirst(3)), id: \.name) { category in
+                ForEach(Array(ActivityCategory.defaultCategories.suffix(2)), id: \.name) { category in
                     CategoryButton(category: category) {
                         onCategorySelected(category.name)
                     }
                 }
+                
+                Spacer()
+                    .frame(maxWidth: .infinity)
             }
         }
         .padding()

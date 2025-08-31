@@ -11,7 +11,6 @@ struct ActivityCategory {
         ActivityCategory(name: "Sports", color: .green, icon: "figure.run"),
         ActivityCategory(name: "Leisure", color: .orange, icon: "gamecontroller.fill"),
         ActivityCategory(name: "Work", color: .purple, icon: "briefcase.fill"),
-        ActivityCategory(name: "Life", color: .cyan, icon: "heart.fill"),
         ActivityCategory(name: "Waste", color: .red, icon: "tv.fill")
     ]
     
