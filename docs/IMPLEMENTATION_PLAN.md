@@ -1,42 +1,48 @@
 # IMPLEMENTATION_PLAN.md
 
-## Stage 1: MVP – Core Activity Tracking
-**Goal:** Deliver a minimal working app where users can log and review daily activities.
+## Stage 1+: MVP + Projects + Charts ✅ **COMPLETED**
+**Goal:** Deliver a minimal working app where users can log and review daily activities with enhanced visualization.
 
 ### Features
 - App structure with SwiftUI + SwiftData.
-- ActivityEvent model with fields: id, title, category, startAt, endAt, duration.
-- Default categories: Learning, Sports, Leisure, Waste.
+- ActivityEvent model with fields: id, title, category, startAt, endAt, duration, projectId.
+- Project model for optional activity categorization.
+- Default categories: Learning, Sports, Leisure, Work, Life, Waste.
 - Timeline view showing today's activities in chronological order.
 - One-tap Start/Stop buttons to record activities.
 - Show ongoing activity with "Now" label until stopped.
 - Ability to edit title, category, and times for an activity.
-- Daily totals per category (text summary only).
+- **NEW: Summary tab with interactive charts using Swift Charts**.
+- **NEW: Daily pie chart showing time distribution by category**.
+- **NEW: Weekly bar chart showing daily patterns across the week**.
+- **NEW: Detailed breakdowns with percentages and formatted durations**.
 
 ### Deliverables
 - Working iOS app buildable via Xcode.
 - Core database schema and SwiftData persistence.
-- Minimal UI (Timeline + Start/Stop + Edit).
-- Basic unit tests for ActivityEvent model.
+- **Tab-based navigation (Timeline + Summary)**.
+- **Interactive charts and visual analytics**.
 
 ---
 
-## Stage 2: Usability & Awareness
-**Goal:** Improve user convenience and awareness of how time is spent.
+## Stage 2: Advanced Usability & Awareness 
+**Goal:** Add advanced user convenience features and smart notifications.
 
 ### Features
-- Support for **custom categories** (user-defined).
+- Support for **custom categories** (user-defined beyond the 6 defaults).
 - Ability to add activities **post-hoc** (after they happened).
-- Daily summary view with pie chart of categories.
-- Weekly summary view with stacked bar chart.
-- Gentle reminders for ongoing "Waste" activity exceeding threshold (e.g., 40 minutes).
-- Simple streak counter for daily goals (e.g., learning ≥ 2h).
+- ~~Daily summary view with pie chart of categories~~ ✅ **COMPLETED in Stage 1+**
+- ~~Weekly summary view with stacked bar chart~~ ✅ **COMPLETED in Stage 1+**
+- **NEW FOCUS:** Gentle reminders for ongoing "Waste" activity exceeding threshold (e.g., 40 minutes).
+- **NEW FOCUS:** Simple streak counter for daily goals (e.g., learning ≥ 2h).
+- **NEW FOCUS:** Goal setting and progress tracking.
 
-### Deliverables
-- Enhanced UI with Daily and Weekly views.
-- Chart visualizations (using Swift Charts).
+### Deliverables  
+- Custom category management UI.
+- Post-hoc activity entry form.
 - Notification system for gentle reminders.
-- Unit tests for summary calculations.
+- Goal setting and streak tracking features.
+- Unit tests for advanced features.
 
 ---
 

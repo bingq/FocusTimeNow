@@ -8,10 +8,13 @@ A lightweight iPhone app that helps people stay disciplined and focused by makin
 Core idea: *"Stay aware of what you're doing, right now."*
 
 ## Current Stage
-- **Stage 1+ (MVP + Projects)** completed with enhancements.
-- Core features: ActivityEvent model, Project model, timeline view, quick Start/Stop, daily totals.
+- **Stage 1+ (MVP + Projects + Charts)** completed with full visualization.
+- Core features: ActivityEvent model, Project model, timeline view, quick Start/Stop.
+- **NEW:** Interactive Summary tab with Swift Charts (daily pie charts, weekly bar charts).
+- **NEW:** Tab-based navigation between Timeline and Summary.
+- **NEW:** 6 default categories: Learning, Sports, Leisure, Work, Life, Waste.
 - Project selection functionality implemented but currently disabled for simplicity.
-- Ready to proceed to Stage 2 (Usability & Awareness features).
+- Ready to proceed to Stage 2 (Advanced Usability features).
 
 ## Key Documents
 - **SPEC.md** → Product specification (vision, problems, solutions, models, principles).  

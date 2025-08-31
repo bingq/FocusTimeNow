@@ -18,6 +18,8 @@
 		FA1234567890123456789017 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789018 /* TimelineView.swift */; };
 		FA1234567890123456789019 /* EditActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789020 /* EditActivityView.swift */; };
 		FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789022 /* ProjectSelectionView.swift */; };
+		FA1234567890123456789041 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789042 /* SummaryView.swift */; };
+		FA1234567890123456789043 /* SummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789044 /* SummaryViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		FA1234567890123456789018 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		FA1234567890123456789020 /* EditActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityView.swift; sourceTree = "<group>"; };
 		FA1234567890123456789022 /* ProjectSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectionView.swift; sourceTree = "<group>"; };
+		FA1234567890123456789042 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		FA1234567890123456789044 /* SummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				FA1234567890123456789016 /* TimelineViewModel.swift */,
+				FA1234567890123456789044 /* SummaryViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -100,6 +105,7 @@
 				FA1234567890123456789018 /* TimelineView.swift */,
 				FA1234567890123456789020 /* EditActivityView.swift */,
 				FA1234567890123456789022 /* ProjectSelectionView.swift */,
+				FA1234567890123456789042 /* SummaryView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -187,9 +193,11 @@
 				FA1234567890123456789011 /* ActivityCategory.swift in Sources */,
 				FA1234567890123456789013 /* Project.swift in Sources */,
 				FA1234567890123456789015 /* TimelineViewModel.swift in Sources */,
+				FA1234567890123456789043 /* SummaryViewModel.swift in Sources */,
 				FA1234567890123456789017 /* TimelineView.swift in Sources */,
 				FA1234567890123456789019 /* EditActivityView.swift in Sources */,
 				FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */,
+				FA1234567890123456789041 /* SummaryView.swift in Sources */,
 				FA1234567890123456789001 /* FocusTimeNowApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

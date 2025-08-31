@@ -60,45 +60,41 @@ Core design principle: **simple, convenient, and extensible.**
 
 ---
 
-## 3. Summary View
+## 3. Summary View ✅ **IMPLEMENTED**
 
 ### Purpose
-- Provide daily and weekly insights.  
-- Reinforce awareness and achievement.  
+- Provide daily and weekly insights with interactive charts.
+- Reinforce awareness and achievement through visualizations.
 
-### Daily Summary Layout
+### Features Implemented
+- **Segmented picker** to switch between Daily/Weekly views
+- **Daily pie chart** (donut style) with color-coded categories
+- **Weekly stacked bar chart** showing daily patterns across 7 days  
+- **Detailed breakdowns** with hours, percentages, and category icons
+- **Legend and color consistency** across all visualizations
+- **Empty state handling** for periods with no data
+- **Swift Charts integration** for native iOS chart experience
 
-    -------------------------------------
-    |  Summary (Daily)                  |
-    -------------------------------------
-    |  Pie Chart: Time by category      |
-    |                                   |
-    |  Learning  2h (40%)               |
-    |  Sports    1h (20%)               |
-    |  Leisure   1h (20%)               |
-    |  Waste     1h (20%)               |
-    -------------------------------------
-    |  Streaks: Learning 3-day streak   |
-    -------------------------------------
-    |  [ Switch to Weekly Summary ]     |
-    -------------------------------------
-
-### Weekly Summary Layout
+### Current Layout (Implemented)
 
     -------------------------------------
-    |  Summary (Weekly)                 |
+    |  Summary                          |
+    |  [ Daily | Weekly ]               |
     -------------------------------------
-    |  Bar Chart: Hours per category    |
-    |                                   |
-    |  Mon: [██ L][█ S][█ W]            |
-    |  Tue: [███ L][██ S]               |
-    |  Wed: [█ L][███ W]                |
-    |  ...                              |
+    |  Interactive Pie/Bar Chart        |
+    |  with Legend                      |
     -------------------------------------
-    |  Goal Progress:                   |
-    |   - Learning: 8h / 10h            |
-    |   - Sports: 2h / 3h               |
+    |  Detailed Breakdown:              |
+    |  📘 Learning  2h 15m (40%)        |
+    |  🏃 Sports    1h 30m (27%)        |
+    |  🎮 Leisure   1h (18%)            |
+    |  💼 Work      45m (15%)           |
     -------------------------------------
+
+### Future Enhancements (Stage 2+)
+- Streak counters and goal tracking
+- Achievement badges
+- Trend analysis and insights
 
 ---
 
@@ -131,10 +127,10 @@ Core design principle: **simple, convenient, and extensible.**
 - Summary  
 - Settings (future expansion: goals, categories, badges)  
 
-### Bottom Tab Layout
+### Bottom Tab Layout ✅ **IMPLEMENTED**
 
     -------------------------------------
-    | [ Timeline ] [ Summary ] [ More ] |
+    | [ Timeline ] [ Summary ]           |
     -------------------------------------
 
 ---
