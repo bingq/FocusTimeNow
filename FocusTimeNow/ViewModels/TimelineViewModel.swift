@@ -8,6 +8,7 @@ class TimelineViewModel {
     private var modelContext: ModelContext?
     var activities: [ActivityEvent] = []
     var ongoingActivity: ActivityEvent?
+    var shouldShowFullScreenTimer: Bool = false
     
     func setModelContext(_ context: ModelContext) {
         self.modelContext = context
@@ -54,6 +55,7 @@ class TimelineViewModel {
         do {
             try modelContext.save()
             loadTodaysActivities()
+            shouldShowFullScreenTimer = true
         } catch {
             print("Failed to save activity: \(error)")
         }
@@ -62,6 +64,7 @@ class TimelineViewModel {
     func stopOngoingActivity() {
         guard let ongoing = ongoingActivity else { return }
         ongoing.stop()
+        shouldShowFullScreenTimer = false
         
         do {
             try modelContext?.save()

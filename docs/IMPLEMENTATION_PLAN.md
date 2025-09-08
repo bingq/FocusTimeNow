@@ -85,3 +85,42 @@
 - Stage 2: simple Projects list (active/archived) + per-project totals in summaries.
 - Stage 3: per-project targets and progress; badges at category/project levels.
 
+## Stage 1.1: Full-Screen Timer Mode (2025-09-08)
+**Goal:** Enhance the timer experience with focused full-screen interface for active sessions.
+
+### Features
+- **Full-screen timer view**: When user taps a category button, transition to dedicated timer screen
+- **Prominent timer display**: Large, real-time ticking counter showing elapsed time
+- **Category context**: Display active category name and icon prominently 
+- **One-tap stop**: Tap anywhere on screen to stop timer and return to timeline
+- **Smooth transitions**: Animated navigation between timeline and timer views
+- **Clean design**: Minimal, distraction-free interface during timing sessions
+
+### Technical Implementation
+- New `FullScreenTimerView` SwiftUI view
+- Navigation state management for view transitions
+- Real-time timer updates using `Timer.publish()`
+- Integration with existing `TimelineViewModel.startActivity()` logic
+- Gesture handling for tap-to-stop functionality
+
+### Deliverables
+- `FullScreenTimerView.swift` - dedicated timer interface
+- Updated `TimelineView.swift` - navigation to full-screen mode
+- Enhanced timer logic in `TimelineViewModel` 
+- Smooth animation transitions
+- Testing on device for timer accuracy
+
+### Priority: High ✅ **COMPLETED**
+### Complexity: Medium (new view + navigation logic)
+### User Impact: High (improved core user experience)
+
+### Implementation Summary (2025-09-08)
+- ✅ Created `FullScreenTimerView` with large timer display, category context, and tap-to-stop functionality
+- ✅ Added smooth animations and transitions (scale, opacity, spring animations)
+- ✅ Integrated with existing `TimelineViewModel` using `shouldShowFullScreenTimer` boolean flag
+- ✅ Updated `TimelineView` to show full-screen timer automatically when starting activities
+- ✅ Real-time timer updates with formatted display (HH:MM:SS or MM:SS)
+- ✅ Clean, distraction-free interface with category colors and icons
+- ✅ Seamless navigation: Category tap → Full-screen timer → Tap anywhere to stop → Return to timeline
+- ✅ Successfully built and tested - ready for use
+

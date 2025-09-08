@@ -1,6 +1,116 @@
 import SwiftUI
 import SwiftData
 
+struct FullScreenTimerView: View {
+    let activity: ActivityEvent
+    let onStop: () -> Void
+    @State private var elapsedTime: TimeInterval = 0
+    @State private var timer: Timer?
+    @State private var scale: CGFloat = 0.8
+    @State private var opacity: Double = 0
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                // Background with category color
+                ActivityCategory.getCategoryColor(for: activity.category)
+                    .opacity(0.1)
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 60) {
+                    Spacer()
+                    
+                    // Category Icon and Name
+                    VStack(spacing: 20) {
+                        Image(systemName: ActivityCategory.getCategoryIcon(for: activity.category))
+                            .font(.system(size: 80, weight: .light))
+                            .foregroundColor(ActivityCategory.getCategoryColor(for: activity.category))
+                            .scaleEffect(scale)
+                            .animation(.spring(response: 0.8, dampingFraction: 0.6), value: scale)
+                        
+                        Text(activity.category)
+                            .font(.largeTitle)
+                            .fontWeight(.medium)
+                            .foregroundColor(.primary)
+                        
+                        if !activity.title.isEmpty && activity.title != activity.category {
+                            Text(activity.title)
+                                .font(.title2)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .opacity(opacity)
+                    .animation(.easeInOut(duration: 0.6).delay(0.2), value: opacity)
+                    
+                    // Large Timer Display
+                    VStack(spacing: 10) {
+                        Text(formatElapsedTime())
+                            .font(.system(size: 72, weight: .thin, design: .monospaced))
+                            .foregroundColor(.primary)
+                            .contentTransition(.numericText())
+                        
+                        Text("TAP TO STOP")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                            .opacity(0.7)
+                    }
+                    .opacity(opacity)
+                    .animation(.easeInOut(duration: 0.6).delay(0.4), value: opacity)
+                    
+                    Spacer()
+                }
+                .padding()
+            }
+        }
+        .onTapGesture {
+            stopTimer()
+        }
+        .onAppear {
+            startTimer()
+            withAnimation {
+                scale = 1.0
+                opacity = 1.0
+            }
+        }
+        .onDisappear {
+            timer?.invalidate()
+        }
+        .navigationBarHidden(true)
+        .statusBarHidden()
+    }
+    
+    private func startTimer() {
+        // Calculate initial elapsed time
+        elapsedTime = Date().timeIntervalSince(activity.startAt)
+        
+        // Start updating timer every second
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            elapsedTime = Date().timeIntervalSince(activity.startAt)
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        onStop()
+        dismiss()
+    }
+    
+    private func formatElapsedTime() -> String {
+        let totalSeconds = Int(elapsedTime)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
+}
+
 struct TimelineView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = TimelineViewModel()
@@ -46,6 +156,13 @@ struct TimelineView: View {
                 if let activity = selectedActivity {
                     EditActivityView(activity: activity) {
                         viewModel.loadTodaysActivities()
+                    }
+                }
+            }
+            .fullScreenCover(isPresented: $viewModel.shouldShowFullScreenTimer) {
+                if let ongoingActivity = viewModel.ongoingActivity {
+                    FullScreenTimerView(activity: ongoingActivity) {
+                        viewModel.stopOngoingActivity()
                     }
                 }
             }
