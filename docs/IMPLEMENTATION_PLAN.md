@@ -124,3 +124,83 @@
 - ✅ Seamless navigation: Category tap → Full-screen timer → Tap anywhere to stop → Return to timeline
 - ✅ Successfully built and tested - ready for use
 
+### iPad Navigation Fix (2025-09-09)
+**Issue:** iPad displayed collapsed sidebar/slide-out menu instead of full interface
+- NavigationView created split-view layout on iPad (incorrect behavior)
+- Users saw blank screen initially, had to tap sidebar to access main interface
+- Poor user experience on iPad devices
+
+**Root Cause:** Using deprecated `NavigationView` which defaults to split-view on iPad
+
+**Solution:** Updated to `NavigationStack` for consistent full-screen navigation
+- ✅ Fixed TimelineView.swift: NavigationView → NavigationStack
+- ✅ Fixed SummaryView.swift: NavigationView → NavigationStack
+- ✅ Both iPhone and iPad now show consistent full-screen interface
+- ✅ Eliminates sidebar/slide-out behavior on iPad
+
+**Impact:** Significantly improved iPad user experience with proper full-screen layout
+
+---
+
+## Stage 2: Freemium Monetization (2025-09-08)
+**Goal:** Transform FocusTimeNow into sustainable freemium business with premium subscriptions
+
+### Free Tier (User Acquisition)
+- **3 categories only:** Work, Personal, Learning (most essential)
+- **7-day activity history** (enough to understand value)
+- **Basic summary view** with daily totals
+- **Core timer functionality** (including new full-screen mode)
+- **Local storage only** (no cloud sync)
+
+### Premium Tier ($4.99/month, $29.99/year)
+- **All 6+ categories** (Exercise, Break, Life + unlimited custom categories)
+- **Unlimited history** with search and filtering
+- **Advanced analytics:** weekly/monthly trends, productivity insights, time patterns
+- **Data export:** CSV, PDF reports for external analysis
+- **Goal setting:** daily/weekly targets with progress tracking
+- **Cloud sync:** seamless data across iPhone, iPad, Mac
+- **Premium themes:** dark mode, custom colors, alternative app icons
+- **Priority support:** faster response to issues/requests
+
+### Technical Implementation Phases
+
+**Phase 1: Subscription Infrastructure (2-3 weeks)**
+- Integrate StoreKit 2 for subscription management
+- Create subscription products in App Store Connect ($4.99/month, $29.99/year)
+- Add RevenueCat or native subscription validation
+- Build premium status tracking in app
+
+**Phase 2: Feature Gating & Paywall (2 weeks)**
+- Implement feature access control system
+- Design and build paywall UI (category limit, upgrade prompts)
+- Add "Upgrade to Premium" buttons strategically placed
+- Create compelling premium feature showcase
+
+**Phase 3: Premium Features Development (3-4 weeks)**
+- Advanced analytics with charts and insights
+- Data export functionality (CSV/PDF generation)
+- Goal setting and progress tracking system
+- Custom category creation and management
+- Cloud sync infrastructure (CloudKit or custom backend)
+
+**Phase 4: Polish & Optimization (2 weeks)**
+- A/B testing different paywall designs and messaging
+- Onboarding flow highlighting premium value
+- Conversion optimization and analytics tracking
+- App Store listing updates emphasizing premium features
+
+### Key Success Metrics
+- **Free-to-Premium conversion rate:** Target 5-10%
+- **Monthly churn rate:** Keep below 5%
+- **Average revenue per user (ARPU):** $2-4/month
+- **Customer lifetime value (CLV):** $50-100
+
+### Revenue Projections
+- **1000 downloads/month** × 10% conversion = 100 premium users
+- **Monthly recurring revenue:** $500-600
+- **Annual revenue potential:** $6,000-10,000+
+
+### Priority: High (Business sustainability)
+### Complexity: High (StoreKit, cloud infrastructure, feature development)
+### User Impact: Medium (value-driven premium features enhance but don't break free experience)
+

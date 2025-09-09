@@ -118,7 +118,7 @@ struct TimelineView: View {
     @State private var selectedActivity: ActivityEvent?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 if let ongoing = viewModel.ongoingActivity {
                     OngoingActivityBanner(activity: ongoing) {
