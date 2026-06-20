@@ -16,6 +16,12 @@ struct ContentView: View {
                     Text("Today")
                 }
 
+            GoalsView()
+                .tabItem {
+                    Image(systemName: "flag")
+                    Text("Goals")
+                }
+
             SummaryView()
                 .tabItem {
                     Image(systemName: "chart.bar")

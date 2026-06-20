@@ -8,6 +8,7 @@ struct TimelineView: View {
     @State private var viewModel = TimelineViewModel()
     @State private var sheetMode: SheetMode?
     @State private var showCoach = false
+    @State private var linkTarget: LinkTarget?
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -29,8 +30,10 @@ struct TimelineView: View {
 
                         if let ongoing = viewModel.ongoingActivity {
                             OngoingCard(activity: ongoing,
+                                        project: viewModel.project(for: ongoing),
                                         onOpen: { viewModel.shouldShowFullScreenTimer = true },
-                                        onStop: { viewModel.stopOngoingActivity() })
+                                        onStop: { viewModel.stopOngoingActivity() },
+                                        onLink: { linkTarget = LinkTarget(activity: ongoing) })
                         }
 
                         ActivityListSection(viewModel: viewModel,
@@ -42,9 +45,10 @@ struct TimelineView: View {
                     .padding(.bottom, 12)
                 }
 
-                StartBar(running: viewModel.ongoingActivity != nil,
-                         onTap: { viewModel.startActivity(category: $0) },
-                         onHold: { sheetMode = .start(category: $0) })
+                StartArea(viewModel: viewModel,
+                          onTapCategory: { viewModel.startActivity(category: $0) },
+                          onHoldCategory: { sheetMode = .start(category: $0) },
+                          onTapProject: { viewModel.startProject($0) })
             }
 
             if let toast = viewModel.toast {
@@ -66,11 +70,23 @@ struct TimelineView: View {
         .sheet(item: $sheetMode) { mode in
             ActivitySheet(mode: mode, viewModel: viewModel)
         }
+        .sheet(item: $linkTarget) { target in
+            ProjectPickerSheet(
+                activityLabel: linkLabel(for: target.activity),
+                onPick: { project in viewModel.linkProject(project, to: target.activity) }
+            )
+        }
         .fullScreenCover(isPresented: $viewModel.shouldShowFullScreenTimer) {
             if let ongoing = viewModel.ongoingActivity {
                 FullScreenTimerView(activity: ongoing, viewModel: viewModel)
             }
         }
+    }
+
+    private func linkLabel(for activity: ActivityEvent) -> String {
+        let cat = ActivityCategory.category(for: activity.category)
+        let title = activity.title.isEmpty ? cat.name : activity.title
+        return "\(title) · \(cat.name) · \(activity.formattedDuration)"
     }
 
     private var header: some View {
@@ -165,50 +181,73 @@ private struct ProportionBar: View {
 
 private struct OngoingCard: View {
     let activity: ActivityEvent
+    let project: Project?
     let onOpen: () -> Void
     let onStop: () -> Void
+    let onLink: () -> Void
     @State private var elapsed: TimeInterval = 0
     private let tick = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         let cat = ActivityCategory.category(for: activity.category)
-        Button(action: onOpen) {
-            HStack(spacing: 12) {
-                Image(systemName: cat.icon)
-                    .font(.system(size: 18))
-                    .foregroundStyle(.white)
-                    .frame(width: 42, height: 42)
-                    .background(cat.color)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Now · \(cat.name)")
-                        .font(.system(size: 11, weight: .bold)).tracking(0.4)
-                        .foregroundStyle(cat.color)
-                    Text(activity.title.isEmpty ? cat.name : activity.title)
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Theme.ink)
-                    Text("running \(TimeFmt.clock(elapsed))")
-                        .font(.system(size: 13)).monospacedDigit()
-                        .foregroundStyle(Theme.ink2)
-                }
-                Spacer()
-                Button(action: onStop) {
-                    HStack(spacing: 6) {
-                        RoundedRectangle(cornerRadius: 2).fill(.white).frame(width: 9, height: 9)
-                        Text("Stop").font(.system(size: 14, weight: .semibold))
+        VStack(spacing: 10) {
+            Button(action: onOpen) {
+                HStack(spacing: 12) {
+                    Image(systemName: cat.icon)
+                        .font(.system(size: 18))
+                        .foregroundStyle(.white)
+                        .frame(width: 42, height: 42)
+                        .background(cat.color)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Now · \(cat.name)")
+                            .font(.system(size: 11, weight: .bold)).tracking(0.4)
+                            .foregroundStyle(cat.color)
+                        Text(activity.title.isEmpty ? cat.name : activity.title)
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(Theme.ink)
+                        Text("running \(TimeFmt.clock(elapsed))")
+                            .font(.system(size: 13)).monospacedDigit()
+                            .foregroundStyle(Theme.ink2)
                     }
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 16).padding(.vertical, 9)
-                    .background(Theme.ink)
+                    Spacer()
+                    Button(action: onStop) {
+                        HStack(spacing: 6) {
+                            RoundedRectangle(cornerRadius: 2).fill(.white).frame(width: 9, height: 9)
+                            Text("Stop").font(.system(size: 14, weight: .semibold))
+                        }
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 16).padding(.vertical, 9)
+                        .background(Theme.ink)
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .buttonStyle(.plain)
+
+            HStack {
+                if let project {
+                    HStack(spacing: 5) {
+                        Circle().fill(cat.color).frame(width: 6, height: 6)
+                        Text(project.name).font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.ink2)
+                    }
+                    .padding(.horizontal, 9).padding(.vertical, 5)
+                    .background(Theme.card)
                     .clipShape(Capsule())
                 }
+                Button(action: onLink) {
+                    Label(project == nil ? "Link to a project" : "Change project", systemImage: "plus")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(cat.color)
+                }
                 .buttonStyle(.plain)
+                Spacer()
             }
-            .padding(14)
-            .background(cat.color.tinted(0.14))
-            .clipShape(RoundedRectangle(cornerRadius: Theme.radius, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .padding(14)
+        .background(cat.color.tinted(0.14))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.radius, style: .continuous))
         .onAppear { elapsed = Date().timeIntervalSince(activity.startAt) }
         .onReceive(tick) { _ in elapsed = Date().timeIntervalSince(activity.startAt) }
     }
@@ -240,6 +279,7 @@ private struct ActivityListSection: View {
                     switch entry {
                     case .activity(let a):
                         SwipeRow(activity: a,
+                                 project: viewModel.project(for: a),
                                  onTap: { onEdit(a) },
                                  onRepeat: { viewModel.startActivity(category: a.category) },
                                  onDelete: { viewModel.deleteActivity(a) })
@@ -293,6 +333,7 @@ private struct GapRow: View {
 
 private struct SwipeRow: View {
     let activity: ActivityEvent
+    let project: Project?
     let onTap: () -> Void
     let onRepeat: () -> Void
     let onDelete: () -> Void
@@ -330,6 +371,12 @@ private struct SwipeRow: View {
                         .font(.system(size: 15, weight: .semibold)).foregroundStyle(Theme.ink)
                     Text("\(activity.timeRange) · \(cat.name)")
                         .font(.system(size: 12)).foregroundStyle(Theme.ink2)
+                    if let project {
+                        HStack(spacing: 5) {
+                            Circle().fill(cat.color).frame(width: 5, height: 5)
+                            Text(project.name).font(.system(size: 11, weight: .medium)).foregroundStyle(Theme.ink2)
+                        }
+                    }
                 }
                 Spacer()
                 Text(activity.formattedDuration)
@@ -360,33 +407,54 @@ private struct SwipeRow: View {
     }
 }
 
-// MARK: - Start bar (3x2 chip grid)
+// MARK: - Start area (ranked "usually" list + category grid)
 
-private struct StartBar: View {
-    let running: Bool
-    let onTap: (String) -> Void
-    let onHold: (String) -> Void
+private struct StartArea: View {
+    let viewModel: TimelineViewModel
+    let onTapCategory: (String) -> Void
+    let onHoldCategory: (String) -> Void
+    let onTapProject: (Project) -> Void
+
+    @State private var showAll = false
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 3)
 
+    private var hasProjects: Bool { !viewModel.quickStartProjects.isEmpty }
+    private var running: Bool { viewModel.ongoingActivity != nil }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Group {
-                if running {
-                    (Text("Tap to ") + Text("switch instantly").foregroundColor(ActivityCategory.getCategoryColor(for: "Learning")) + Text(" →"))
-                } else {
-                    Text("Start something →")
-                }
-            }
-            .font(.system(size: 11, weight: .bold)).tracking(0.6)
-            .foregroundStyle(Theme.ink3)
+            header
 
-            LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(ActivityCategory.defaultCategories) { cat in
-                    CategoryChip(cat: cat,
-                                 onTap: { onTap(cat.name) },
-                                 onHold: { onHold(cat.name) })
+            if hasProjects {
+                VStack(spacing: 8) {
+                    ForEach(viewModel.quickStartProjects) { project in
+                        ProjectStartRow(
+                            project: project,
+                            goalName: viewModel.goalName(for: project),
+                            goalColor: viewModel.goalColor(for: project),
+                            allTime: viewModel.allTimeSeconds(for: project),
+                            onTap: { onTapProject(project) }
+                        )
+                    }
                 }
+
+                Button { withAnimation { showAll.toggle() } } label: {
+                    HStack(spacing: 5) {
+                        Text("All categories & projects")
+                        Image(systemName: showAll ? "chevron.up" : "chevron.down")
+                    }
+                    .font(.system(size: 13, weight: .medium)).foregroundStyle(Theme.ink2)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Theme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: Theme.radiusSm, style: .continuous))
+                }
+                .buttonStyle(.plain)
+            }
+
+            if !hasProjects || showAll {
+                categoryGrid
             }
         }
         .padding(.horizontal, 16)
@@ -394,6 +462,87 @@ private struct StartBar: View {
         .padding(.bottom, 8)
         .background(Theme.bgApp)
     }
+
+    private var header: some View {
+        Group {
+            if hasProjects {
+                Text("Start what you usually do →")
+            } else if running {
+                (Text("Tap to ") + Text("switch instantly").foregroundColor(ActivityCategory.getCategoryColor(for: "Learning")) + Text(" →"))
+            } else {
+                Text("Start something →")
+            }
+        }
+        .font(.system(size: 11, weight: .bold)).tracking(0.6)
+        .foregroundStyle(Theme.ink3)
+    }
+
+    private var categoryGrid: some View {
+        LazyVGrid(columns: columns, spacing: 10) {
+            ForEach(ActivityCategory.defaultCategories) { cat in
+                CategoryChip(cat: cat,
+                             onTap: { onTapCategory(cat.name) },
+                             onHold: { onHoldCategory(cat.name) })
+            }
+        }
+    }
+}
+
+private struct ProjectStartRow: View {
+    let project: Project
+    let goalName: String?
+    let goalColor: Color?
+    let allTime: Int
+    let onTap: () -> Void
+
+    var body: some View {
+        let catColor = ActivityCategory.getCategoryColor(for: project.category)
+        Button(action: onTap) {
+            HStack(spacing: 12) {
+                Image(systemName: ActivityCategory.getCategoryIcon(for: project.category))
+                    .font(.system(size: 17))
+                    .foregroundStyle(catColor)
+                    .frame(width: 38, height: 38)
+                    .background(catColor.tinted(0.18))
+                    .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(project.name)
+                        .font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.ink)
+                        .lineLimit(1)
+                    if let goalName {
+                        HStack(spacing: 5) {
+                            Circle().fill(goalColor ?? catColor).frame(width: 5, height: 5)
+                            Text(goalName).font(.system(size: 11)).foregroundStyle(Theme.ink2)
+                        }
+                    } else {
+                        Text("\(project.category) · no goal").font(.system(size: 11)).foregroundStyle(Theme.ink3)
+                    }
+                }
+                Spacer()
+                if allTime > 0 {
+                    Text(TimeFmt.duration(seconds: allTime))
+                        .font(.system(size: 12, weight: .medium)).monospacedDigit()
+                        .foregroundStyle(Theme.ink3)
+                }
+                Image(systemName: "play.fill")
+                    .font(.system(size: 12)).foregroundStyle(.white)
+                    .frame(width: 30, height: 30)
+                    .background(Theme.ink)
+                    .clipShape(Circle())
+            }
+            .padding(.horizontal, 12).padding(.vertical, 10)
+            .background(Theme.card)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Link target wrapper (project picker sheet routing)
+
+struct LinkTarget: Identifiable {
+    let activity: ActivityEvent
+    var id: UUID { activity.id }
 }
 
 private struct CategoryChip: View {
@@ -491,14 +640,19 @@ private struct ToastView: View {
     }
 }
 
-// MARK: - Full-screen Timer with hold-to-stop
+// MARK: - Full-screen Pomodoro Timer (soft rounds: focus → break → complete)
 
 struct FullScreenTimerView: View {
     @Bindable var activity: ActivityEvent
     let viewModel: TimelineViewModel
     @Environment(\.dismiss) private var dismiss
 
-    @State private var elapsed: TimeInterval = 0
+    enum Phase { case focus, breakTime, complete }
+
+    @State private var phase: Phase = .focus
+    @State private var now = Date()
+    @State private var roundsCompleted = 0
+    @State private var breakStartedAt: Date?
     @State private var paused = false
     @State private var pauseStartedAt: Date?
     @State private var holdProgress: CGFloat = 0
@@ -506,90 +660,298 @@ struct FullScreenTimerView: View {
 
     private let tick = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
-    var body: some View {
-        let cat = ActivityCategory.category(for: activity.category)
-        ZStack {
-            Color(hex: "0C0C0F").ignoresSafeArea()
-
-            VStack(spacing: 28) {
-                Spacer()
-
-                HStack(spacing: 8) {
-                    Image(systemName: cat.icon).font(.system(size: 13)).foregroundStyle(.white)
-                        .frame(width: 26, height: 26).background(cat.color).clipShape(Circle())
-                    Text(cat.name).font(.system(size: 15, weight: .semibold)).foregroundStyle(.white)
-                }
-
-                Text(activity.title.isEmpty ? cat.name : activity.title)
-                    .font(.system(size: 15)).foregroundStyle(Color(hex: "9A9AA2"))
-
-                Text(TimeFmt.clock(elapsed))
-                    .font(.system(size: 72, weight: .ultraLight, design: .default))
-                    .monospacedDigit().tracking(1)
-                    .foregroundStyle(.white)
-                    .contentTransition(.numericText())
-
-                Text(paused ? "PAUSED" : " ")
-                    .font(.system(size: 12, weight: .semibold)).tracking(1.5)
-                    .foregroundStyle(Color(hex: "9A9AA2"))
-
-                Spacer()
-
-                holdRing
-
-                HStack(spacing: 12) {
-                    Button(action: togglePause) {
-                        Label(paused ? "Resume" : "Pause",
-                              systemImage: paused ? "play.fill" : "pause.fill")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 18).padding(.vertical, 11)
-                            .background(Color.white.opacity(0.12))
-                            .clipShape(Capsule())
-                    }
-                    Button { dismiss() } label: {
-                        Text("Minimize")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(Color(hex: "9A9AA2"))
-                            .padding(.horizontal, 18).padding(.vertical, 11)
-                            .background(Color.white.opacity(0.06))
-                            .clipShape(Capsule())
-                    }
-                }
-                .buttonStyle(.plain)
-
-                Text("Tap to pause · press & hold the ring to stop")
-                    .font(.system(size: 12)).foregroundStyle(Color(hex: "6A6A72"))
-                    .padding(.bottom, 24)
-            }
-            .padding()
-        }
-        .statusBarHidden()
-        .onAppear { recomputeElapsed() }
-        .onReceive(tick) { _ in if !paused { recomputeElapsed() } }
+    // Focused time excludes pauses & breaks (start is shifted forward for both).
+    private var totalFocused: TimeInterval { max(0, now.timeIntervalSince(activity.startAt)) }
+    private var roundElapsed: TimeInterval { totalFocused - Double(roundsCompleted) * Theme.focusRoundSeconds }
+    private var roundRemaining: TimeInterval { max(0, Theme.focusRoundSeconds - roundElapsed) }
+    private var breakRemaining: TimeInterval {
+        guard let breakStartedAt else { return Theme.breakSeconds }
+        return max(0, Theme.breakSeconds - now.timeIntervalSince(breakStartedAt))
     }
 
-    private var holdRing: some View {
+    var body: some View {
         ZStack {
-            Circle().stroke(Color.white.opacity(0.12), lineWidth: 7)
-            Circle()
-                .trim(from: 0, to: holdProgress)
-                .stroke(Theme.danger, style: StrokeStyle(lineWidth: 7, lineCap: .round))
-                .rotationEffect(.degrees(-90))
-            VStack(spacing: 8) {
-                RoundedRectangle(cornerRadius: 5).fill(Theme.danger).frame(width: 26, height: 26)
-                Text("HOLD TO STOP")
-                    .font(.system(size: 10, weight: .bold)).tracking(1.5)
-                    .foregroundStyle(.white)
+            Color(hex: "0C0C0F").ignoresSafeArea()
+            switch phase {
+            case .focus: focusView
+            case .breakTime: breakView
+            case .complete: completeView
             }
         }
-        .frame(width: 150, height: 150)
-        .contentShape(Circle())
+        .statusBarHidden()
+        .onAppear { now = Date() }
+        .onReceive(tick) { _ in advance() }
+    }
+
+    // MARK: Focus round
+
+    private var focusView: some View {
+        let cat = ActivityCategory.category(for: activity.category)
+        let chipLabel = activity.title.isEmpty ? cat.name : activity.title
+        return VStack(spacing: 0) {
+            Spacer()
+            chip(icon: cat.icon, text: chipLabel, color: cat.color)
+            Text("🍅 FOCUS · ROUND \(roundsCompleted + 1)")
+                .font(.system(size: 12, weight: .bold)).tracking(1.5)
+                .foregroundStyle(cat.color)
+                .padding(.top, 18)
+
+            countdownRing(remaining: roundRemaining, total: Theme.focusRoundSeconds, color: cat.color,
+                          subtitle: paused ? "paused" : "break in \(Int(roundRemaining / 60)) min")
+                .padding(.top, 12)
+
+            roundDots(color: cat.color).padding(.top, 18)
+
+            Text("\(roundsCompleted) round\(roundsCompleted == 1 ? "" : "s") done today · \(TimeFmt.duration(seconds: roundsCompleted * Int(Theme.focusRoundSeconds))) focused")
+                .font(.system(size: 13)).foregroundStyle(Color(hex: "9A9AA2"))
+                .padding(.top, 16)
+
+            Spacer()
+
+            HStack(spacing: 12) {
+                pillButton(paused ? "Resume" : "Pause", systemImage: paused ? "play.fill" : "pause.fill",
+                           bg: Color.white.opacity(0.12), fg: .white, action: togglePause)
+                holdToEndButton
+            }
+            .padding(.bottom, 8)
+
+            Button { dismiss() } label: {
+                Text("Minimize").font(.system(size: 13)).foregroundStyle(Color(hex: "6A6A72"))
+            }
+            .padding(.bottom, 6)
+
+            Text("Pomodoro auto-pauses for a break at 0:00")
+                .font(.system(size: 12)).foregroundStyle(Color(hex: "6A6A72"))
+                .padding(.bottom, 24)
+        }
+        .padding(.horizontal, 24)
+    }
+
+    // MARK: Break
+
+    private var breakView: some View {
+        let green = ActivityCategory.getCategoryColor(for: "Sports")
+        return VStack(spacing: 0) {
+            Spacer()
+            chip(icon: "cup.and.saucer.fill", text: "Break", color: green)
+            Text("● SHORT BREAK · STRETCH")
+                .font(.system(size: 12, weight: .bold)).tracking(1.5)
+                .foregroundStyle(green)
+                .padding(.top, 18)
+
+            countdownRing(remaining: breakRemaining, total: Theme.breakSeconds, color: green,
+                          subtitle: "round \(roundsCompleted + 1) next")
+                .padding(.top, 12)
+
+            Text("\(roundsCompleted) of \(roundsCompleted + 1) rounds done · \(TimeFmt.duration(seconds: roundsCompleted * Int(Theme.focusRoundSeconds))) focused 🍅")
+                .font(.system(size: 13)).foregroundStyle(Color(hex: "9A9AA2"))
+                .padding(.top, 22)
+
+            Spacer()
+
+            HStack(spacing: 12) {
+                pillButton("Skip break", systemImage: "play.fill",
+                           bg: Color.white.opacity(0.12), fg: .white) { endBreak() }
+                pillButton("End session", systemImage: nil,
+                           bg: Theme.danger.opacity(0.16), fg: Theme.danger) { endSessionFromBreak() }
+            }
+            .padding(.bottom, 8)
+
+            Text("Next focus round starts automatically")
+                .font(.system(size: 12)).foregroundStyle(Color(hex: "6A6A72"))
+                .padding(.bottom, 24)
+        }
+        .padding(.horizontal, 24)
+    }
+
+    // MARK: Complete
+
+    private var completeView: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            HStack(spacing: 6) {
+                ForEach(0..<max(1, roundsCompleted), id: \.self) { _ in
+                    Text("🍅").font(.system(size: 26))
+                }
+            }
+            Text("\(roundsCompleted) round\(roundsCompleted == 1 ? "" : "s") complete")
+                .font(.system(size: 24, weight: .heavy)).foregroundStyle(.white)
+                .padding(.top, 18)
+
+            (Text(TimeFmt.duration(seconds: Int(totalFocused))).font(.system(size: 15, weight: .bold))
+             + Text(" focused on").font(.system(size: 15)))
+                .foregroundStyle(Color(hex: "C4C4CC"))
+                .padding(.top, 6)
+            Text(completeSubtitle)
+                .font(.system(size: 14)).foregroundStyle(Color(hex: "9A9AA2"))
+
+            HStack(spacing: 7) {
+                Image(systemName: "checkmark").font(.system(size: 11, weight: .bold))
+                Text("Logged to timeline & goal progress").font(.system(size: 13, weight: .medium))
+            }
+            .foregroundStyle(ActivityCategory.getCategoryColor(for: "Sports"))
+            .padding(.horizontal, 14).padding(.vertical, 9)
+            .background(ActivityCategory.getCategoryColor(for: "Sports").opacity(0.16))
+            .clipShape(Capsule())
+            .padding(.top, 22)
+
+            Spacer()
+
+            HStack(spacing: 12) {
+                pillButton("Done", systemImage: nil, bg: Color.white.opacity(0.12), fg: .white) {
+                    viewModel.stopOngoingActivity(); dismiss()
+                }
+                pillButton("One more round", systemImage: nil, bg: .white, fg: Theme.ink) {
+                    now = Date(); phase = .focus
+                }
+            }
+            .padding(.bottom, 40)
+        }
+        .padding(.horizontal, 24)
+    }
+
+    private var completeSubtitle: String {
+        let cat = ActivityCategory.category(for: activity.category)
+        let title = activity.title.isEmpty ? cat.name : activity.title
+        if let project = viewModel.project(for: activity), let goal = viewModel.goalName(for: project) {
+            return "\(project.name) · \(goal)"
+        }
+        return "\(title) · \(cat.name)"
+    }
+
+    // MARK: Shared chrome
+
+    private func chip(icon: String, text: String, color: Color) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon).font(.system(size: 13)).foregroundStyle(.white)
+                .frame(width: 26, height: 26).background(color).clipShape(Circle())
+            Text(text).font(.system(size: 15, weight: .semibold)).foregroundStyle(.white)
+        }
+        .padding(.horizontal, 12).padding(.vertical, 7)
+        .background(Color.white.opacity(0.08))
+        .clipShape(Capsule())
+    }
+
+    private func countdownRing(remaining: TimeInterval, total: TimeInterval, color: Color, subtitle: String) -> some View {
+        ZStack {
+            Circle().stroke(Color.white.opacity(0.10), lineWidth: 8)
+            Circle()
+                .trim(from: 0, to: max(0, min(1, remaining / total)))
+                .stroke(color, style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+                .animation(.linear(duration: 0.4), value: remaining)
+            VStack(spacing: 4) {
+                Text(TimeFmt.clock(remaining))
+                    .font(.system(size: 46, weight: .light)).monospacedDigit()
+                    .foregroundStyle(.white).contentTransition(.numericText())
+                Text(subtitle).font(.system(size: 12)).foregroundStyle(Color(hex: "9A9AA2"))
+            }
+        }
+        .frame(width: 210, height: 210)
+    }
+
+    private func roundDots(color: Color) -> some View {
+        let total = max(4, roundsCompleted + 1)
+        return HStack(spacing: 8) {
+            ForEach(0..<total, id: \.self) { i in
+                Circle()
+                    .fill(i < roundsCompleted ? color : (i == roundsCompleted ? color.opacity(0.6) : Color.white.opacity(0.18)))
+                    .frame(width: 7, height: 7)
+            }
+        }
+    }
+
+    private func pillButton(_ title: String, systemImage: String?, bg: Color, fg: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 7) {
+                if let systemImage { Image(systemName: systemImage).font(.system(size: 12)) }
+                Text(title).font(.system(size: 14, weight: .semibold))
+            }
+            .foregroundStyle(fg)
+            .padding(.horizontal, 20).padding(.vertical, 12)
+            .background(bg)
+            .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var holdToEndButton: some View {
+        ZStack {
+            Capsule().fill(Theme.danger.opacity(0.16))
+            GeometryReader { geo in
+                Capsule().fill(Theme.danger.opacity(0.32))
+                    .frame(width: geo.size.width * holdProgress)
+            }
+            HStack(spacing: 7) {
+                RoundedRectangle(cornerRadius: 2).fill(Theme.danger).frame(width: 9, height: 9)
+                Text("Hold to end").font(.system(size: 14, weight: .semibold))
+            }
+            .foregroundStyle(Theme.danger)
+        }
+        .frame(height: 44)
+        .fixedSize(horizontal: true, vertical: false)
+        .padding(.horizontal, 20)
+        .clipShape(Capsule())
+        .contentShape(Capsule())
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in if !isHolding { beginHold() } }
                 .onEnded { _ in endHold() }
         )
+    }
+
+    // MARK: Transitions
+
+    private func advance() {
+        guard !paused else { return }
+        now = Date()
+        switch phase {
+        case .focus:
+            if roundRemaining <= 0 { enterBreak() }
+        case .breakTime:
+            if breakRemaining <= 0 { endBreak() }
+        case .complete:
+            break
+        }
+    }
+
+    private func enterBreak() {
+        roundsCompleted += 1
+        breakStartedAt = Date()
+        phase = .breakTime
+    }
+
+    /// Skip or finish a break: exclude the break time from the logged session, resume focus.
+    private func endBreak() {
+        if let breakStartedAt {
+            viewModel.extendStart(of: activity, by: Date().timeIntervalSince(breakStartedAt))
+        }
+        breakStartedAt = nil
+        now = Date()
+        phase = .focus
+    }
+
+    private func endSessionFromBreak() {
+        if let breakStartedAt {
+            viewModel.extendStart(of: activity, by: Date().timeIntervalSince(breakStartedAt))
+        }
+        breakStartedAt = nil
+        now = Date()
+        phase = .complete
+    }
+
+    private func togglePause() {
+        if paused {
+            if let started = pauseStartedAt {
+                viewModel.extendStart(of: activity, by: Date().timeIntervalSince(started))
+            }
+            pauseStartedAt = nil
+            paused = false
+            now = Date()
+        } else {
+            pauseStartedAt = Date()
+            paused = true
+        }
     }
 
     private func beginHold() {
@@ -608,25 +970,8 @@ struct FullScreenTimerView: View {
 
     private func completeStop() {
         isHolding = false
-        viewModel.stopOngoingActivity()
-        dismiss()
-    }
-
-    private func togglePause() {
-        if paused {
-            if let started = pauseStartedAt {
-                viewModel.extendStart(of: activity, by: Date().timeIntervalSince(started))
-            }
-            pauseStartedAt = nil
-            paused = false
-            recomputeElapsed()
-        } else {
-            pauseStartedAt = Date()
-            paused = true
-        }
-    }
-
-    private func recomputeElapsed() {
-        elapsed = Date().timeIntervalSince(activity.startAt)
+        holdProgress = 0
+        now = Date()
+        phase = .complete
     }
 }

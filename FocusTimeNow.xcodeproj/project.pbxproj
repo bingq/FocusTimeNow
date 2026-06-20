@@ -20,6 +20,10 @@
 		FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789022 /* ProjectSelectionView.swift */; };
 		FA1234567890123456789041 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789042 /* SummaryView.swift */; };
 		FA1234567890123456789043 /* SummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789044 /* SummaryViewModel.swift */; };
+		FA1234567890123456789045 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789046 /* Goal.swift */; };
+		FA1234567890123456789047 /* GoalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789048 /* GoalsViewModel.swift */; };
+		FA1234567890123456789049 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789050 /* GoalsView.swift */; };
+		FA1234567890123456789051 /* ManageGoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789052 /* ManageGoalsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +41,10 @@
 		FA1234567890123456789022 /* ProjectSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectionView.swift; sourceTree = "<group>"; };
 		FA1234567890123456789042 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		FA1234567890123456789044 /* SummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewModel.swift; sourceTree = "<group>"; };
+		FA1234567890123456789046 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
+		FA1234567890123456789048 /* GoalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewModel.swift; sourceTree = "<group>"; };
+		FA1234567890123456789050 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
+		FA1234567890123456789052 /* ManageGoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageGoalsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +94,7 @@
 				FA1234567890123456789010 /* ActivityEvent.swift */,
 				FA1234567890123456789012 /* ActivityCategory.swift */,
 				FA1234567890123456789014 /* Project.swift */,
+				FA1234567890123456789046 /* Goal.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -95,6 +104,7 @@
 			children = (
 				FA1234567890123456789016 /* TimelineViewModel.swift */,
 				FA1234567890123456789044 /* SummaryViewModel.swift */,
+				FA1234567890123456789048 /* GoalsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -106,6 +116,8 @@
 				FA1234567890123456789020 /* EditActivityView.swift */,
 				FA1234567890123456789022 /* ProjectSelectionView.swift */,
 				FA1234567890123456789042 /* SummaryView.swift */,
+				FA1234567890123456789050 /* GoalsView.swift */,
+				FA1234567890123456789052 /* ManageGoalsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -199,6 +211,10 @@
 				FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */,
 				FA1234567890123456789041 /* SummaryView.swift in Sources */,
 				FA1234567890123456789001 /* FocusTimeNowApp.swift in Sources */,
+				FA1234567890123456789045 /* Goal.swift in Sources */,
+				FA1234567890123456789047 /* GoalsViewModel.swift in Sources */,
+				FA1234567890123456789049 /* GoalsView.swift in Sources */,
+				FA1234567890123456789051 /* ManageGoalsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

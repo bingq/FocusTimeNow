@@ -38,6 +38,10 @@ class TimelineViewModel {
     var shouldShowFullScreenTimer: Bool = false
     var toast: ToastMessage?
 
+    var projects: [Project] = []
+    var goals: [Goal] = []
+    private var allFinished: [ActivityEvent] = []
+
     var coachDismissed: Bool {
         get { UserDefaults.standard.bool(forKey: "ftn_coachDismissed") }
         set { UserDefaults.standard.set(newValue, forKey: "ftn_coachDismissed") }
@@ -69,6 +73,73 @@ class TimelineViewModel {
         } catch {
             print("Failed to fetch activities: \(error)")
         }
+
+        loadProjectsAndGoals()
+    }
+
+    private func loadProjectsAndGoals() {
+        guard let modelContext else { return }
+        let projDesc = FetchDescriptor<Project>(sortBy: [SortDescriptor(\.sortOrder), SortDescriptor(\.createdAt)])
+        projects = (try? modelContext.fetch(projDesc)) ?? []
+        let goalDesc = FetchDescriptor<Goal>(sortBy: [SortDescriptor(\.sortOrder), SortDescriptor(\.createdAt)])
+        goals = (try? modelContext.fetch(goalDesc)) ?? []
+        let allDesc = FetchDescriptor<ActivityEvent>()
+        allFinished = ((try? modelContext.fetch(allDesc)) ?? []).filter { $0.endAt != nil }
+    }
+
+    // MARK: - Quick-start ("usually") list
+
+    /// Pinned, active projects ranked by all-time invested time.
+    var quickStartProjects: [Project] {
+        projects.filter { $0.isActive && $0.pinnedToQuickStart }
+            .sorted { allTimeSeconds(for: $0) > allTimeSeconds(for: $1) }
+    }
+
+    func allTimeSeconds(for project: Project) -> Int {
+        allFinished.reduce(0) { $0 + ($1.projectId == project.id ? ($1.duration ?? 0) : 0) }
+    }
+
+    func goalName(for project: Project) -> String? {
+        guard let gid = project.goalId else { return nil }
+        return goals.first { $0.id == gid }?.name
+    }
+
+    func goalColor(for project: Project) -> Color? {
+        guard let gid = project.goalId else { return nil }
+        return goals.first { $0.id == gid }?.color
+    }
+
+    func project(for activity: ActivityEvent) -> Project? {
+        guard let pid = activity.projectId else { return nil }
+        return projects.first { $0.id == pid }
+    }
+
+    /// Start a project: inherits the project's default category and tags the activity.
+    func startProject(_ project: Project, openTimer: Bool = true) {
+        guard let modelContext else { return }
+        let wasRunning = ongoingActivity != nil
+        ongoingActivity?.stop()
+
+        let newActivity = ActivityEvent(
+            title: project.name,
+            category: project.category,
+            startAt: Date(),
+            projectId: project.id
+        )
+        modelContext.insert(newActivity)
+        save()
+        loadTodaysActivities()
+        shouldShowFullScreenTimer = openTimer
+
+        if wasRunning { showToast(category: project.category, text: "Switched to \(project.name)") }
+    }
+
+    /// Attach (or detach) a project to an activity; attaching inherits the project's category.
+    func linkProject(_ project: Project?, to activity: ActivityEvent) {
+        activity.projectId = project?.id
+        if let project { activity.category = project.category }
+        save()
+        loadTodaysActivities()
     }
 
     // MARK: - Start / switch / stop

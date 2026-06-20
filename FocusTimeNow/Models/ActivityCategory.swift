@@ -65,6 +65,10 @@ enum Theme {
     static let longPress: TimeInterval = 0.43
     static let gapThresholdMinutes = 10
 
+    // pomodoro (soft rounds)
+    static let focusRoundSeconds: TimeInterval = 25 * 60
+    static let breakSeconds: TimeInterval = 5 * 60
+
     // radii
     static let radius: CGFloat = 18
     static let radiusSm: CGFloat = 13
