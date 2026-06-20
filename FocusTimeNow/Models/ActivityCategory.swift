@@ -105,17 +105,4 @@ struct ActivityCategory: Identifiable {
     static func getCategoryIcon(for name: String) -> String {
         category(for: name).icon
     }
-
-    /// Suggested default title when starting a category quickly.
-    static func defaultTitle(for name: String) -> String {
-        switch name {
-        case "Learning": return "Swift study"
-        case "Sports": return "Running"
-        case "Leisure": return "Reading"
-        case "Work": return "Email triage"
-        case "Life": return "Family time"
-        case "Waste": return "Short Videos"
-        default: return name
-        }
-    }
 }

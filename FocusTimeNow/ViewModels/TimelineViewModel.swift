@@ -129,7 +129,7 @@ class TimelineViewModel {
 
         let start = Date().addingTimeInterval(TimeInterval(-backMinutes * 60))
         let newActivity = ActivityEvent(
-            title: ActivityCategory.defaultTitle(for: category),
+            title: "",
             category: category,
             startAt: start
         )
@@ -165,7 +165,7 @@ class TimelineViewModel {
     func logGap(category: String, start: Date, end: Date) {
         guard let modelContext = modelContext else { return }
         let activity = ActivityEvent(
-            title: ActivityCategory.defaultTitle(for: category),
+            title: "",
             category: category,
             startAt: start,
             endAt: end
@@ -178,10 +178,6 @@ class TimelineViewModel {
     }
 
     func recategorize(_ activity: ActivityEvent, to category: String) {
-        // If the title was just the old category's default, move it to the new default too.
-        if activity.title == ActivityCategory.defaultTitle(for: activity.category) {
-            activity.title = ActivityCategory.defaultTitle(for: category)
-        }
         activity.category = category
         save()
         loadTodaysActivities()

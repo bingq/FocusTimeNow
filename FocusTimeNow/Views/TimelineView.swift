@@ -344,7 +344,11 @@ private struct SwipeRow: View {
 
     var body: some View {
         let cat = ActivityCategory.category(for: activity.category)
-        let title = project?.name ?? (activity.title.isEmpty ? cat.name : activity.title)
+        // With a project, show the project name and keep the category in the
+        // sub-line. Without one, the category name is the title, so drop the
+        // redundant category suffix after the time.
+        let title = project?.name ?? cat.name
+        let subline = project != nil ? "\(activity.timeRange) · \(cat.name)" : activity.timeRange
 
         Button(action: onTap) {
             HStack(spacing: 12) {
@@ -353,7 +357,7 @@ private struct SwipeRow: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.system(size: 15, weight: .semibold)).foregroundStyle(Theme.ink)
-                    Text("\(activity.timeRange) · \(cat.name)")
+                    Text(subline)
                         .font(.system(size: 12)).foregroundStyle(Theme.ink2)
                     if let goalName {
                         HStack(spacing: 5) {
