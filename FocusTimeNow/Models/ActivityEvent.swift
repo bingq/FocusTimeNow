@@ -13,7 +13,7 @@ final class ActivityEvent {
     var tags: [String]?
     var sourceApp: String?
     var projectId: UUID?
-    
+
     init(
         title: String = "",
         category: String,
@@ -35,45 +35,68 @@ final class ActivityEvent {
         self.projectId = projectId
         self.duration = self.calculateDuration()
     }
-    
+
     func calculateDuration() -> Int? {
         guard let endAt = endAt else { return nil }
         return Int(endAt.timeIntervalSince(startAt))
     }
-    
+
     func stop() {
         endAt = Date()
         duration = calculateDuration()
     }
-    
+
     var isOngoing: Bool {
         endAt == nil
     }
-    
+
     var formattedDuration: String {
         guard let duration = duration else { return "Now" }
-        let minutes = duration / 60
-        let hours = minutes / 60
-        let remainingMinutes = minutes % 60
-        
-        if hours > 0 {
-            return "\(hours)h \(remainingMinutes)m"
-        } else {
-            return "\(minutes)m"
-        }
+        return TimeFmt.duration(seconds: duration)
     }
-    
+
+    /// 12-hour range, e.g. "7:50 – 8:30 AM".
     var timeRange: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        
-        let start = formatter.string(from: startAt)
-        
+        let start = TimeFmt.clock12(startAt)
         if let endAt = endAt {
-            let end = formatter.string(from: endAt)
-            return "\(start) – \(end)"
-        } else {
-            return "\(start) – Now"
+            return "\(start) – \(TimeFmt.clock12(endAt))"
         }
+        return "\(start) – Now"
+    }
+}
+
+// MARK: - Shared formatting
+
+enum TimeFmt {
+    /// Compact duration from seconds: "45m", "1h 20m", "2h".
+    static func duration(seconds: Int) -> String {
+        let totalMinutes = max(0, Int((Double(seconds) / 60).rounded()))
+        if totalMinutes < 60 { return "\(totalMinutes)m" }
+        let h = totalMinutes / 60, m = totalMinutes % 60
+        return m > 0 ? "\(h)h \(m)m" : "\(h)h"
+    }
+
+    static func duration(_ interval: TimeInterval) -> String {
+        duration(seconds: Int(interval))
+    }
+
+    /// Stopwatch clock: "00:42" or "1:02:05".
+    static func clock(_ interval: TimeInterval) -> String {
+        let s = max(0, Int(interval))
+        let h = s / 3600, m = (s % 3600) / 60, sec = s % 60
+        if h > 0 {
+            return String(format: "%d:%02d:%02d", h, m, sec)
+        }
+        return String(format: "%02d:%02d", m, sec)
+    }
+
+    private static let clock12Formatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "h:mm a"
+        return f
+    }()
+
+    static func clock12(_ date: Date) -> String {
+        clock12Formatter.string(from: date)
     }
 }
