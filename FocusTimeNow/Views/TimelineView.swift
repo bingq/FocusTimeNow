@@ -9,7 +9,6 @@ struct TimelineView: View {
     @State private var sheetMode: SheetMode?
     @State private var showCoach = false
     @State private var linkTarget: LinkTarget?
-    @State private var didLoad = false
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -18,10 +17,13 @@ struct TimelineView: View {
             VStack(spacing: 0) {
                 header
 
+                TodayRail(viewModel: viewModel)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    .padding(.bottom, 4)
+
                 ScrollView {
                     VStack(spacing: 12) {
-                        TodayRail(viewModel: viewModel)
-
                         if showCoach {
                             GestureCoachCard {
                                 viewModel.coachDismissed = true
@@ -45,7 +47,7 @@ struct TimelineView: View {
                     .padding(.top, 8)
                     .padding(.bottom, 12)
                 }
-                .id(didLoad)
+                .frame(maxHeight: .infinity)
 
                 StartArea(viewModel: viewModel,
                           onTapCategory: { viewModel.startActivity(category: $0) },
@@ -61,10 +63,6 @@ struct TimelineView: View {
         .onAppear {
             viewModel.setModelContext(modelContext)
             showCoach = !viewModel.coachDismissed
-            // Flip the ScrollView's id once data is loaded so it rebuilds and
-            // remeasures its content height, making it scrollable on first
-            // launch instead of only after a tab switch (bingq/FocusTimeNow#15).
-            didLoad = true
         }
         .onChange(of: viewModel.toast?.id) { _, _ in
             guard viewModel.toast != nil else { return }
@@ -288,9 +286,7 @@ private struct ActivityListSection: View {
                                  project: proj,
                                  goalName: proj.flatMap { viewModel.goalName(for: $0) },
                                  goalColor: proj.flatMap { viewModel.goalColor(for: $0) },
-                                 onTap: { onEdit(a) },
-                                 onRepeat: { viewModel.startActivity(category: a.category) },
-                                 onDelete: { viewModel.deleteActivity(a) })
+                                 onTap: { onEdit(a) })
                     case .gap(_, let start, let end):
                         GapRow(start: start, end: end) { onGap(start, end) }
                     }
@@ -345,35 +341,12 @@ private struct SwipeRow: View {
     let goalName: String?
     let goalColor: Color?
     let onTap: () -> Void
-    let onRepeat: () -> Void
-    let onDelete: () -> Void
-
-    @State private var offset: CGFloat = 0
-    @GestureState private var drag: CGFloat = 0
-
-    private let maxReveal: CGFloat = 96
-    private let threshold: CGFloat = 52
 
     var body: some View {
         let cat = ActivityCategory.category(for: activity.category)
         let title = project?.name ?? (activity.title.isEmpty ? cat.name : activity.title)
-        let dx = max(-maxReveal, min(maxReveal, offset + drag))
 
-        ZStack {
-            // Underlying actions
-            HStack {
-                Label("Repeat", systemImage: "arrow.clockwise")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(ActivityCategory.getCategoryColor(for: "Sports"))
-                Spacer()
-                Label("Delete", systemImage: "trash")
-                    .labelStyle(.titleAndIcon)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Theme.danger)
-            }
-            .padding(.horizontal, 18)
-
-            // Foreground row
+        Button(action: onTap) {
             HStack(spacing: 12) {
                 RoundedRectangle(cornerRadius: 5).fill(cat.color)
                     .frame(width: 9, height: 36)
@@ -397,24 +370,8 @@ private struct SwipeRow: View {
             .padding(.horizontal, 14).padding(.vertical, 12)
             .background(Theme.card)
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .offset(x: dx)
-            .gesture(
-                DragGesture(minimumDistance: 8)
-                    .updating($drag) { value, state, _ in state = value.translation.width }
-                    .onEnded { value in
-                        let final = offset + value.translation.width
-                        if final < -threshold { offset = -maxReveal }
-                        else if final > threshold { offset = maxReveal }
-                        else { offset = 0 }
-                    }
-            )
-            .onTapGesture {
-                if offset > threshold { withAnimation { offset = 0 }; onRepeat() }
-                else if offset < -threshold { onDelete() }
-                else { onTap() }
-            }
         }
-        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: dx)
+        .buttonStyle(.plain)
     }
 }
 
