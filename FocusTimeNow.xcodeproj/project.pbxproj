@@ -20,6 +20,10 @@
 		FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789022 /* ProjectSelectionView.swift */; };
 		FA1234567890123456789041 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789042 /* SummaryView.swift */; };
 		FA1234567890123456789043 /* SummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789044 /* SummaryViewModel.swift */; };
+		FA1234567890123456789045 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789046 /* Goal.swift */; };
+		FA1234567890123456789047 /* GoalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789048 /* GoalsViewModel.swift */; };
+		FA1234567890123456789049 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789050 /* GoalsView.swift */; };
+		FA1234567890123456789051 /* ManageGoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1234567890123456789052 /* ManageGoalsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +41,10 @@
 		FA1234567890123456789022 /* ProjectSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSelectionView.swift; sourceTree = "<group>"; };
 		FA1234567890123456789042 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		FA1234567890123456789044 /* SummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewModel.swift; sourceTree = "<group>"; };
+		FA1234567890123456789046 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
+		FA1234567890123456789048 /* GoalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewModel.swift; sourceTree = "<group>"; };
+		FA1234567890123456789050 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
+		FA1234567890123456789052 /* ManageGoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageGoalsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +94,7 @@
 				FA1234567890123456789010 /* ActivityEvent.swift */,
 				FA1234567890123456789012 /* ActivityCategory.swift */,
 				FA1234567890123456789014 /* Project.swift */,
+				FA1234567890123456789046 /* Goal.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -95,6 +104,7 @@
 			children = (
 				FA1234567890123456789016 /* TimelineViewModel.swift */,
 				FA1234567890123456789044 /* SummaryViewModel.swift */,
+				FA1234567890123456789048 /* GoalsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -106,6 +116,8 @@
 				FA1234567890123456789020 /* EditActivityView.swift */,
 				FA1234567890123456789022 /* ProjectSelectionView.swift */,
 				FA1234567890123456789042 /* SummaryView.swift */,
+				FA1234567890123456789050 /* GoalsView.swift */,
+				FA1234567890123456789052 /* ManageGoalsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -199,6 +211,10 @@
 				FA1234567890123456789021 /* ProjectSelectionView.swift in Sources */,
 				FA1234567890123456789041 /* SummaryView.swift in Sources */,
 				FA1234567890123456789001 /* FocusTimeNowApp.swift in Sources */,
+				FA1234567890123456789045 /* Goal.swift in Sources */,
+				FA1234567890123456789047 /* GoalsViewModel.swift in Sources */,
+				FA1234567890123456789049 /* GoalsView.swift in Sources */,
+				FA1234567890123456789051 /* ManageGoalsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +253,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -297,6 +314,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -324,21 +342,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"FocusTimeNow/Preview Content\"";
+				DEVELOPMENT_TEAM = AR2HJ934P2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusNow;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.focustime.FocusTimeNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -352,23 +374,28 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"FocusTimeNow/Preview Content\"";
+				DEVELOPMENT_TEAM = AR2HJ934P2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusNow;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.focustime.FocusTimeNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -378,20 +405,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FA1234567890123456789036 /* Build configuration list for PBXProject "FocusTimeNow" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FA1234567890123456789037 /* Debug */,
-				FA1234567890123456789038 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		FA1234567890123456789032 /* Build configuration list for PBXNativeTarget "FocusTimeNow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FA1234567890123456789039 /* Debug */,
 				FA1234567890123456789040 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA1234567890123456789036 /* Build configuration list for PBXProject "FocusTimeNow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA1234567890123456789037 /* Debug */,
+				FA1234567890123456789038 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

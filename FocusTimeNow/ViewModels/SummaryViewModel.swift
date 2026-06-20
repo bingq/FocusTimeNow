@@ -8,179 +8,156 @@ class SummaryViewModel {
     private var modelContext: ModelContext?
     var dailyActivities: [ActivityEvent] = []
     var weeklyActivities: [ActivityEvent] = []
-    
+
     func setModelContext(_ context: ModelContext) {
         self.modelContext = context
         loadData()
     }
-    
+
     func loadData() {
         loadDailyActivities()
         loadWeeklyActivities()
     }
-    
+
     private func loadDailyActivities() {
         guard let modelContext = modelContext else { return }
-        
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
-        
-        let predicate = #Predicate<ActivityEvent> { activity in
-            activity.startAt >= today && activity.startAt < tomorrow && activity.endAt != nil
+        let predicate = #Predicate<ActivityEvent> { a in
+            a.startAt >= today && a.startAt < tomorrow && a.endAt != nil
         }
-        
-        let descriptor = FetchDescriptor<ActivityEvent>(
-            predicate: predicate,
-            sortBy: [SortDescriptor(\.startAt)]
-        )
-        
-        do {
-            dailyActivities = try modelContext.fetch(descriptor)
-        } catch {
-            print("Failed to fetch daily activities: \(error)")
-        }
+        let descriptor = FetchDescriptor<ActivityEvent>(predicate: predicate, sortBy: [SortDescriptor(\.startAt)])
+        dailyActivities = (try? modelContext.fetch(descriptor)) ?? []
     }
-    
+
     private func loadWeeklyActivities() {
         guard let modelContext = modelContext else { return }
-        
         let calendar = Calendar.current
-        let today = Date()
-        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
+        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: Date())?.start ?? Date()
         let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
-        
-        let predicate = #Predicate<ActivityEvent> { activity in
-            activity.startAt >= startOfWeek && activity.startAt < endOfWeek && activity.endAt != nil
+        let predicate = #Predicate<ActivityEvent> { a in
+            a.startAt >= startOfWeek && a.startAt < endOfWeek && a.endAt != nil
         }
-        
-        let descriptor = FetchDescriptor<ActivityEvent>(
-            predicate: predicate,
-            sortBy: [SortDescriptor(\.startAt)]
-        )
-        
-        do {
-            weeklyActivities = try modelContext.fetch(descriptor)
-        } catch {
-            print("Failed to fetch weekly activities: \(error)")
-        }
+        let descriptor = FetchDescriptor<ActivityEvent>(predicate: predicate, sortBy: [SortDescriptor(\.startAt)])
+        weeklyActivities = (try? modelContext.fetch(descriptor)) ?? []
     }
-    
-    // Daily Chart Data
+
+    // MARK: - Daily
+
     var dailyChartData: [ChartDataItem] {
-        let totals = calculateTotals(for: dailyActivities)
-        let grandTotal = totals.values.reduce(0, +)
-        
-        return totals.compactMap { (category, seconds) in
-            guard seconds > 0 else { return nil }
-            let hours = Double(seconds) / 3600.0
-            let percentage = grandTotal > 0 ? (Double(seconds) / Double(grandTotal)) * 100 : 0
-            
-            return ChartDataItem(
-                category: category,
-                hours: hours,
-                seconds: seconds,
-                percentage: percentage,
-                color: ActivityCategory.getCategoryColor(for: category)
-            )
-        }.sorted { $0.hours > $1.hours }
+        buildChartData(from: dailyActivities)
     }
-    
-    // Weekly Chart Data  
-    var weeklyChartData: [WeeklyChartDataItem] {
+
+    var dailyTotalSeconds: Int {
+        dailyActivities.compactMap(\.duration).reduce(0, +)
+    }
+
+    var topDaily: ChartDataItem? { dailyChartData.first }
+
+    var dailyWasteSeconds: Int {
+        dailyActivities.filter { $0.category == "Waste" }.compactMap(\.duration).reduce(0, +)
+    }
+
+    var dailyWastePercent: Int {
+        guard dailyTotalSeconds > 0 else { return 0 }
+        return Int((Double(dailyWasteSeconds) / Double(dailyTotalSeconds) * 100).rounded())
+    }
+
+    // MARK: - Weekly
+
+    var weekDays: [WeekDayDatum] {
         let calendar = Calendar.current
-        let today = Date()
-        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)?.start ?? today
-        
-        var weekData: [WeeklyChartDataItem] = []
-        
+        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: Date())?.start ?? Date()
+        let symbols = ["S", "M", "T", "W", "T", "F", "S"] // mapped by weekday component below
+        let fullNames = calendar.weekdaySymbols
+
+        var result: [WeekDayDatum] = []
         for i in 0..<7 {
             let day = calendar.date(byAdding: .day, value: i, to: startOfWeek)!
             let dayStart = calendar.startOfDay(for: day)
             let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
-            
-            let dayActivities = weeklyActivities.filter {
-                $0.startAt >= dayStart && $0.startAt < dayEnd
+            let acts = weeklyActivities.filter { $0.startAt >= dayStart && $0.startAt < dayEnd }
+
+            var totals: [String: Int] = [:]
+            for a in acts { if let d = a.duration { totals[a.category, default: 0] += d } }
+
+            let segs = ActivityCategory.defaultCategories.compactMap { cat -> WeekSegment? in
+                let secs = totals[cat.name] ?? 0
+                guard secs > 0 else { return nil }
+                return WeekSegment(category: cat.name, color: cat.color, seconds: secs)
             }
-            
-            let dayTotals = calculateTotals(for: dayActivities)
-            let dayName = calendar.shortWeekdaySymbols[calendar.component(.weekday, from: day) - 1]
-            
-            let categoryHours = ActivityCategory.defaultCategories.map { category in
-                CategoryHours(
-                    category: category.name,
-                    hours: Double(dayTotals[category.name] ?? 0) / 3600.0,
-                    color: category.color
-                )
-            }
-            
-            weekData.append(WeeklyChartDataItem(day: dayName, categoryHours: categoryHours))
+            let weekdayIndex = calendar.component(.weekday, from: day) - 1
+            result.append(WeekDayDatum(
+                index: i,
+                label: symbols[weekdayIndex],
+                fullName: fullNames[weekdayIndex],
+                segments: segs,
+                totalSeconds: segs.reduce(0) { $0 + $1.seconds }
+            ))
         }
-        
-        return weekData
+        return result
     }
-    
-    // Weekly totals for breakdown
+
+    var weekTotalSeconds: Int {
+        weeklyActivities.compactMap(\.duration).reduce(0, +)
+    }
+
     var weeklyTotalData: [ChartDataItem] {
-        let totals = calculateTotals(for: weeklyActivities)
-        let grandTotal = totals.values.reduce(0, +)
-        
+        buildChartData(from: weeklyActivities)
+    }
+
+    var topWeekly: ChartDataItem? { weeklyTotalData.first }
+
+    var weeklyDailyAverageSeconds: Int {
+        weekTotalSeconds / 7
+    }
+
+    // MARK: - Shared
+
+    private func buildChartData(from activities: [ActivityEvent]) -> [ChartDataItem] {
+        var totals: [String: Int] = [:]
+        for a in activities { if let d = a.duration { totals[a.category, default: 0] += d } }
+        let grand = totals.values.reduce(0, +)
         return totals.compactMap { (category, seconds) in
             guard seconds > 0 else { return nil }
-            let hours = Double(seconds) / 3600.0
-            let percentage = grandTotal > 0 ? (Double(seconds) / Double(grandTotal)) * 100 : 0
-            
             return ChartDataItem(
                 category: category,
-                hours: hours,
+                hours: Double(seconds) / 3600,
                 seconds: seconds,
-                percentage: percentage,
+                percentage: grand > 0 ? Double(seconds) / Double(grand) * 100 : 0,
                 color: ActivityCategory.getCategoryColor(for: category)
             )
-        }.sorted { $0.hours > $1.hours }
-    }
-    
-    private func calculateTotals(for activities: [ActivityEvent]) -> [String: Int] {
-        var totals: [String: Int] = [:]
-        
-        for activity in activities {
-            if let duration = activity.duration {
-                totals[activity.category, default: 0] += duration
-            }
-        }
-        
-        return totals
+        }.sorted { $0.seconds > $1.seconds }
     }
 }
 
-// Data structures for charts
-struct ChartDataItem {
+// MARK: - Data structures
+
+struct ChartDataItem: Identifiable {
     let category: String
     let hours: Double
     let seconds: Int
     let percentage: Double
     let color: Color
-    
-    var formattedDuration: String {
-        let minutes = seconds / 60
-        let hrs = minutes / 60
-        let remainingMinutes = minutes % 60
-        
-        if hrs > 0 {
-            return "\(hrs)h \(remainingMinutes)m"
-        } else {
-            return "\(minutes)m"
-        }
-    }
+    var id: String { category }
+    var formattedDuration: String { TimeFmt.duration(seconds: seconds) }
 }
 
-struct WeeklyChartDataItem {
-    let day: String
-    let categoryHours: [CategoryHours]
-}
-
-struct CategoryHours {
+struct WeekSegment: Identifiable {
     let category: String
-    let hours: Double
     let color: Color
+    let seconds: Int
+    var id: String { category }
+    var formattedDuration: String { TimeFmt.duration(seconds: seconds) }
+}
+
+struct WeekDayDatum: Identifiable {
+    let index: Int
+    let label: String
+    let fullName: String
+    let segments: [WeekSegment]
+    let totalSeconds: Int
+    var id: Int { index }
+    var hours: Double { Double(totalSeconds) / 3600 }
 }

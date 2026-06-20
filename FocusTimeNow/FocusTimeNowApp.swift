@@ -7,6 +7,6 @@ struct FocusTimeNowApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [ActivityEvent.self, Project.self])
+        .modelContainer(for: [ActivityEvent.self, Project.self, Goal.self, Milestone.self])
     }
 }

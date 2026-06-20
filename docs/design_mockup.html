@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FocusTime Now — Design Mockups</title>
+<style>
+  :root{
+    --blue:#0A84FF; --green:#30D158; --orange:#FF9F0A;
+    --purple:#BF5AF2; --cyan:#64D2FF; --red:#FF453A;
+    --bg:#F2F2F7; --card:#FFFFFF; --gray6:#E5E5EA;
+    --label:#1C1C1E; --secondary:#8E8E93; --hair:#D1D1D6;
+  }
+  *{box-sizing:border-box; -webkit-font-smoothing:antialiased;}
+  body{
+    margin:0; padding:40px 20px; background:#3A3A3C;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;
+    color:var(--label);
+  }
+  h1.page{color:#fff; text-align:center; font-weight:600; margin:0 0 6px;}
+  p.sub{color:#aeaeb2; text-align:center; margin:0 0 36px; font-size:14px;}
+  .grid{display:flex; flex-wrap:wrap; gap:48px 40px; justify-content:center; align-items:flex-start;}
+  .frame{width:340px;}
+  .caption{color:#fff; text-align:center; font-size:13px; font-weight:600; margin-top:14px; letter-spacing:.2px;}
+  .caption span{display:block; color:#aeaeb2; font-weight:400; font-size:11px; margin-top:3px;}
+
+  /* iPhone shell */
+  .phone{
+    width:340px; height:710px; background:var(--bg); border-radius:46px;
+    border:11px solid #1a1a1a; position:relative; overflow:hidden;
+    box-shadow:0 18px 50px rgba(0,0,0,.45);
+  }
+  .notch{position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:130px; height:26px; background:#1a1a1a; border-radius:0 0 18px 18px; z-index:50;}
+  .statusbar{height:50px; display:flex; align-items:flex-end; justify-content:space-between;
+    padding:0 26px 4px; font-size:13px; font-weight:600;}
+  .screen{height:calc(100% - 50px); display:flex; flex-direction:column;}
+
+  /* nav */
+  .navtitle{font-size:30px; font-weight:700; padding:6px 18px 10px;}
+  .navtitle.inline{font-size:16px; font-weight:600; text-align:center; padding:10px;}
+
+  /* generic card */
+  .card{background:var(--card); border-radius:14px; margin:0 14px 10px; padding:14px;}
+
+  /* ongoing banner */
+  .banner{margin:0 0 4px; padding:14px 18px; display:flex; align-items:center; gap:12px;}
+  .banner .ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;}
+  .banner .meta{flex:1;}
+  .banner .lbl{font-size:11px;color:var(--secondary);}
+  .banner .ttl{font-size:16px;font-weight:600;}
+  .banner .elapsed{font-size:12px;color:var(--secondary);font-variant-numeric:tabular-nums;}
+  .stopbtn{border:1px solid var(--red); color:var(--red); background:transparent;
+    border-radius:9px; padding:7px 16px; font-size:14px; font-weight:600;}
+
+  /* activity rows */
+  .list{flex:1; overflow:auto; padding:4px 0;}
+  .row{background:var(--card); border-radius:12px; margin:0 14px 8px; padding:12px 14px;}
+  .row .top{display:flex; align-items:center; gap:9px;}
+  .row .top .name{font-size:15px;font-weight:600;flex:1;}
+  .row .top .time{font-size:12px;color:var(--secondary);font-variant-numeric:tabular-nums;}
+  .row .bot{display:flex; align-items:center; margin-top:7px;}
+  .pill{font-size:11px; padding:2px 9px; border-radius:8px; font-weight:500;}
+  .row .dur{margin-left:auto; font-size:12px; color:var(--secondary);}
+  .ci{font-size:15px; width:20px; text-align:center;}
+
+  /* today summary strip */
+  .strip{background:var(--gray6); padding:12px 0 14px;}
+  .strip h4{margin:0 0 8px; padding:0 16px; font-size:16px; font-weight:700;}
+  .strip .scroll{display:flex; gap:20px; padding:0 16px; overflow:auto;}
+  .strip .item{text-align:center; min-width:54px;}
+  .strip .item .c{font-size:11px;color:var(--secondary);}
+  .strip .item .v{font-size:15px;font-weight:700;margin-top:3px;}
+
+  /* category buttons */
+  .cats{padding:12px 14px 10px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+  .catbtn{border-radius:12px; padding:13px 4px; text-align:center; color:#fff;}
+  .catbtn .i{font-size:20px;}
+  .catbtn .n{font-size:11px; font-weight:600; margin-top:5px;}
+
+  /* tab bar */
+  .tabbar{height:64px; border-top:1px solid var(--hair); background:rgba(249,249,249,.94);
+    display:flex; }
+  .tab{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    font-size:10px; color:var(--secondary);}
+  .tab.active{color:var(--blue);}
+  .tab .i{font-size:21px;}
+
+  /* full screen timer */
+  .timer-screen{background:rgba(10,132,255,.10); flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:46px; text-align:center;}
+  .timer-screen .bigic{font-size:78px; color:var(--blue);}
+  .timer-screen .cat{font-size:30px; font-weight:500;}
+  .timer-screen .ttl2{font-size:18px; color:var(--secondary); margin-top:-30px;}
+  .timer-screen .clock{font-size:62px; font-weight:200; font-variant-numeric:tabular-nums; letter-spacing:1px;}
+  .timer-screen .hint{font-size:12px; font-weight:600; color:var(--secondary); opacity:.7; letter-spacing:1px; margin-top:-30px;}
+
+  /* form (edit) */
+  .formsec{margin:18px 14px 0;}
+  .formsec .h{font-size:12px; color:var(--secondary); text-transform:uppercase; padding:0 6px 6px; letter-spacing:.4px;}
+  .formsec .body{background:var(--card); border-radius:12px; overflow:hidden;}
+  .frow{display:flex; align-items:center; padding:12px 14px; border-bottom:1px solid var(--gray6); font-size:15px;}
+  .frow:last-child{border-bottom:none;}
+  .frow .k{color:var(--label);}
+  .frow .v{margin-left:auto; color:var(--secondary); display:flex; align-items:center; gap:6px;}
+  .frow .chev{color:#c7c7cc;}
+  .toolbar{display:flex; justify-content:space-between; padding:12px 18px; font-size:16px;}
+  .toolbar .cancel{color:var(--blue);}
+  .toolbar .save{color:var(--blue); font-weight:600;}
+  .danger{color:var(--red); justify-content:center;}
+
+  /* summary */
+  .seg{display:flex; background:var(--gray6); border-radius:9px; margin:6px 14px 16px; padding:2px;}
+  .seg div{flex:1; text-align:center; font-size:14px; padding:7px; border-radius:7px; font-weight:500;}
+  .seg .on{background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  .donut{width:170px; height:170px; border-radius:50%; margin:6px auto 18px;
+    background:
+      conic-gradient(
+        var(--blue) 0 40%,
+        var(--green) 40% 67%,
+        var(--orange) 67% 85%,
+        var(--purple) 85% 100%);
+    -webkit-mask:radial-gradient(circle 42px at center, transparent 98%, #000 100%);
+            mask:radial-gradient(circle 42px at center, transparent 98%, #000 100%);}
+  .legend{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; padding:0 16px 6px;}
+  .legend .lg{display:flex; align-items:center; gap:8px; font-size:12px;}
+  .legend .lg .sw{width:11px;height:11px;border-radius:50%;}
+  .legend .lg .t{flex:1;}
+  .legend .lg .v{color:var(--secondary);}
+  .bars{display:flex; align-items:flex-end; gap:9px; height:150px; padding:0 18px; margin:6px 0 14px;}
+  .barcol{flex:1; display:flex; flex-direction:column; justify-content:flex-end; gap:0;}
+  .barcol .seg-b{width:100%;}
+  .barcol .lbl{font-size:10px; color:var(--secondary); text-align:center; margin-top:6px;}
+  .brk .frow .ci{margin-right:10px;}
+  .brk .pct{font-size:11px; color:var(--secondary);}
+  .brk .v2{display:flex; flex-direction:column; align-items:flex-end;}
+</style>
+</head>
+<body>
+  <h1 class="page">FocusTime Now — UI Mockups</h1>
+  <p class="sub">Faithful render of the current SwiftUI implementation · sample data from docs · for design review</p>
+
+  <div class="grid">
+
+    <!-- ============ TIMELINE ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span>5G&nbsp;&nbsp;100%</span></div>
+        <div class="screen">
+          <div class="navtitle">Timeline</div>
+
+          <!-- ongoing banner -->
+          <div class="banner" style="background:rgba(255,69,58,.10);">
+            <div class="ic" style="background:var(--red);">📺</div>
+            <div class="meta">
+              <div class="lbl">Current Activity</div>
+              <div class="ttl">Short Videos</div>
+              <div class="elapsed">00:42</div>
+            </div>
+            <button class="stopbtn">Stop</button>
+          </div>
+
+          <div class="list">
+            <div class="row">
+              <div class="top"><span class="ci" style="color:var(--orange)">🎮</span><span class="name">Reading</span><span class="time">08:40 – 09:10</span></div>
+              <div class="bot"><span class="pill" style="background:rgba(255,159,10,.2);color:var(--orange)">Leisure</span><span class="dur">30m</span></div>
+            </div>
+            <div class="row">
+              <div class="top"><span class="ci" style="color:var(--green)">🏃</span><span class="name">Running</span><span class="time">07:50 – 08:30</span></div>
+              <div class="bot"><span class="pill" style="background:rgba(48,209,88,.2);color:var(--green)">Sports</span><span class="dur">40m</span></div>
+            </div>
+            <div class="row">
+              <div class="top"><span class="ci" style="color:var(--blue)">📘</span><span class="name">Swift study</span><span class="time">07:00 – 07:45</span></div>
+              <div class="bot"><span class="pill" style="background:rgba(10,132,255,.2);color:var(--blue)">Learning</span><span class="dur">45m</span></div>
+            </div>
+            <div class="row">
+              <div class="top"><span class="ci" style="color:var(--purple)">💼</span><span class="name">Email triage</span><span class="time">06:30 – 06:55</span></div>
+              <div class="bot"><span class="pill" style="background:rgba(191,90,242,.2);color:var(--purple)">Work</span><span class="dur">25m</span></div>
+            </div>
+          </div>
+
+          <!-- today summary strip -->
+          <div class="strip">
+            <h4>Today's Summary</h4>
+            <div class="scroll">
+              <div class="item"><div class="c">Learning</div><div class="v" style="color:var(--blue)">45m</div></div>
+              <div class="item"><div class="c">Sports</div><div class="v" style="color:var(--green)">40m</div></div>
+              <div class="item"><div class="c">Leisure</div><div class="v" style="color:var(--orange)">30m</div></div>
+              <div class="item"><div class="c">Work</div><div class="v" style="color:var(--purple)">25m</div></div>
+              <div class="item"><div class="c">Life</div><div class="v" style="color:var(--cyan)">0m</div></div>
+              <div class="item"><div class="c">Waste</div><div class="v" style="color:var(--red)">0m</div></div>
+            </div>
+          </div>
+
+          <!-- category buttons -->
+          <div class="cats">
+            <div class="catbtn" style="background:var(--blue)"><div class="i">📘</div><div class="n">Learning</div></div>
+            <div class="catbtn" style="background:var(--green)"><div class="i">🏃</div><div class="n">Sports</div></div>
+            <div class="catbtn" style="background:var(--orange)"><div class="i">🎮</div><div class="n">Leisure</div></div>
+            <div class="catbtn" style="background:var(--purple)"><div class="i">💼</div><div class="n">Work</div></div>
+            <div class="catbtn" style="background:var(--cyan)"><div class="i">❤️</div><div class="n">Life</div></div>
+            <div class="catbtn" style="background:var(--red)"><div class="i">📺</div><div class="n">Waste</div></div>
+          </div>
+
+          <div class="tabbar">
+            <div class="tab active"><span class="i">🕐</span>Timeline</div>
+            <div class="tab"><span class="i">📊</span>Summary</div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">1 · Timeline (Home)<span>banner · scrollable list · summary strip · 6 start buttons</span></div>
+    </div>
+
+    <!-- ============ FULL SCREEN TIMER ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar" style="visibility:hidden"><span>9:41</span><span>100%</span></div>
+        <div class="screen">
+          <div class="timer-screen">
+            <div class="bigic">📺</div>
+            <div>
+              <div class="cat">Waste</div>
+            </div>
+            <div class="ttl2">Short Videos</div>
+            <div class="clock">00:42</div>
+            <div class="hint">TAP TO STOP</div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">2 · Full-Screen Timer<span>auto-launches on start · tap anywhere to stop</span></div>
+    </div>
+
+    <!-- ============ EDIT ACTIVITY ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span>5G&nbsp;&nbsp;100%</span></div>
+        <div class="screen" style="background:var(--bg)">
+          <div class="toolbar"><span class="cancel">Cancel</span><span class="save">Save</span></div>
+          <div class="navtitle inline">Edit Activity</div>
+
+          <div class="formsec">
+            <div class="h">Activity Details</div>
+            <div class="body">
+              <div class="frow"><span class="k">Title</span><span class="v">Running</span></div>
+              <div class="frow"><span class="k">Category</span><span class="v"><span style="color:var(--green)">🏃 Sports</span><span class="chev">›</span></span></div>
+              <div class="frow"><span class="k">Project</span><span class="v">No Project<span class="chev">›</span></span></div>
+            </div>
+          </div>
+
+          <div class="formsec">
+            <div class="h">Timing</div>
+            <div class="body">
+              <div class="frow"><span class="k">Start Time</span><span class="v">Today 07:50</span></div>
+              <div class="frow"><span class="k">End Time</span><span class="v">Today 08:30</span></div>
+              <div class="frow"><span class="k">Duration</span><span class="v">40m</span></div>
+            </div>
+          </div>
+
+          <div class="formsec">
+            <div class="h">Notes</div>
+            <div class="body">
+              <div class="frow" style="color:var(--secondary)">Optional notes</div>
+            </div>
+          </div>
+
+          <div class="formsec">
+            <div class="body">
+              <div class="frow danger">Delete Activity</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">3 · Edit Activity (sheet)<span>title · category · project · timing · notes · delete</span></div>
+    </div>
+
+    <!-- ============ SUMMARY DAILY ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span>5G&nbsp;&nbsp;100%</span></div>
+        <div class="screen">
+          <div class="navtitle">Summary</div>
+          <div class="seg"><div class="on">Daily</div><div>Weekly</div></div>
+
+          <div class="card">
+            <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Today's Time Distribution</div>
+            <div class="donut"></div>
+            <div class="legend">
+              <div class="lg"><span class="sw" style="background:var(--blue)"></span><span class="t">Learning</span><span class="v">45m</span></div>
+              <div class="lg"><span class="sw" style="background:var(--green)"></span><span class="t">Sports</span><span class="v">40m</span></div>
+              <div class="lg"><span class="sw" style="background:var(--orange)"></span><span class="t">Leisure</span><span class="v">30m</span></div>
+              <div class="lg"><span class="sw" style="background:var(--purple)"></span><span class="t">Work</span><span class="v">25m</span></div>
+            </div>
+          </div>
+
+          <div class="card brk">
+            <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Daily Breakdown</div>
+            <div class="frow" style="border-bottom:1px solid var(--gray6)"><span class="ci" style="color:var(--blue)">📘</span><span class="k">Learning</span><span class="v2" style="margin-left:auto"><b style="font-size:14px">45m</b><span class="pct">32%</span></span></div>
+            <div class="frow" style="border-bottom:1px solid var(--gray6)"><span class="ci" style="color:var(--green)">🏃</span><span class="k">Sports</span><span class="v2" style="margin-left:auto"><b style="font-size:14px">40m</b><span class="pct">29%</span></span></div>
+            <div class="frow" style="border-bottom:1px solid var(--gray6)"><span class="ci" style="color:var(--orange)">🎮</span><span class="k">Leisure</span><span class="v2" style="margin-left:auto"><b style="font-size:14px">30m</b><span class="pct">21%</span></span></div>
+            <div class="frow"><span class="ci" style="color:var(--purple)">💼</span><span class="k">Work</span><span class="v2" style="margin-left:auto"><b style="font-size:14px">25m</b><span class="pct">18%</span></span></div>
+          </div>
+
+          <div class="tabbar">
+            <div class="tab"><span class="i">🕐</span>Timeline</div>
+            <div class="tab active"><span class="i">📊</span>Summary</div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">4 · Summary — Daily<span>donut chart · legend · breakdown with %</span></div>
+    </div>
+
+    <!-- ============ SUMMARY WEEKLY ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span>5G&nbsp;&nbsp;100%</span></div>
+        <div class="screen">
+          <div class="navtitle">Summary</div>
+          <div class="seg"><div>Daily</div><div class="on">Weekly</div></div>
+
+          <div class="card">
+            <div style="font-size:16px;font-weight:700;margin-bottom:6px;">This Week's Pattern</div>
+            <div class="bars">
+              <!-- each column stacks category segments -->
+              <div class="barcol"><div class="seg-b" style="height:30px;background:var(--blue)"></div><div class="seg-b" style="height:20px;background:var(--green)"></div><div class="seg-b" style="height:15px;background:var(--purple)"></div><div class="lbl">Mon</div></div>
+              <div class="barcol"><div class="seg-b" style="height:45px;background:var(--blue)"></div><div class="seg-b" style="height:25px;background:var(--orange)"></div><div class="lbl">Tue</div></div>
+              <div class="barcol"><div class="seg-b" style="height:20px;background:var(--green)"></div><div class="seg-b" style="height:40px;background:var(--purple)"></div><div class="seg-b" style="height:20px;background:var(--red)"></div><div class="lbl">Wed</div></div>
+              <div class="barcol"><div class="seg-b" style="height:55px;background:var(--blue)"></div><div class="seg-b" style="height:18px;background:var(--cyan)"></div><div class="lbl">Thu</div></div>
+              <div class="barcol"><div class="seg-b" style="height:30px;background:var(--orange)"></div><div class="seg-b" style="height:35px;background:var(--red)"></div><div class="lbl">Fri</div></div>
+              <div class="barcol"><div class="seg-b" style="height:50px;background:var(--green)"></div><div class="seg-b" style="height:25px;background:var(--cyan)"></div><div class="lbl">Sat</div></div>
+              <div class="barcol"><div class="seg-b" style="height:22px;background:var(--orange)"></div><div class="seg-b" style="height:30px;background:var(--red)"></div><div class="lbl">Sun</div></div>
+            </div>
+            <div class="legend" style="grid-template-columns:1fr 1fr 1fr">
+              <div class="lg"><span class="sw" style="background:var(--blue)"></span><span class="t">Learning</span></div>
+              <div class="lg"><span class="sw" style="background:var(--green)"></span><span class="t">Sports</span></div>
+              <div class="lg"><span class="sw" style="background:var(--orange)"></span><span class="t">Leisure</span></div>
+              <div class="lg"><span class="sw" style="background:var(--purple)"></span><span class="t">Work</span></div>
+              <div class="lg"><span class="sw" style="background:var(--cyan)"></span><span class="t">Life</span></div>
+              <div class="lg"><span class="sw" style="background:var(--red)"></span><span class="t">Waste</span></div>
+            </div>
+          </div>
+
+          <div class="tabbar">
+            <div class="tab"><span class="i">🕐</span>Timeline</div>
+            <div class="tab active"><span class="i">📊</span>Summary</div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">5 · Summary — Weekly<span>stacked bars (no axis labels) · 3-col legend</span></div>
+    </div>
+
+  </div>
+</body>
+</html>
