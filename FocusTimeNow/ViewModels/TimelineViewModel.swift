@@ -87,13 +87,7 @@ class TimelineViewModel {
         allFinished = ((try? modelContext.fetch(allDesc)) ?? []).filter { $0.endAt != nil }
     }
 
-    // MARK: - Quick-start ("usually") list
-
-    /// Pinned, active projects ranked by all-time invested time.
-    var quickStartProjects: [Project] {
-        projects.filter { $0.isActive && $0.pinnedToQuickStart }
-            .sorted { allTimeSeconds(for: $0) > allTimeSeconds(for: $1) }
-    }
+    // MARK: - Project / goal lookups
 
     func allTimeSeconds(for project: Project) -> Int {
         allFinished.reduce(0) { $0 + ($1.projectId == project.id ? ($1.duration ?? 0) : 0) }
@@ -112,26 +106,6 @@ class TimelineViewModel {
     func project(for activity: ActivityEvent) -> Project? {
         guard let pid = activity.projectId else { return nil }
         return projects.first { $0.id == pid }
-    }
-
-    /// Start a project: inherits the project's default category and tags the activity.
-    func startProject(_ project: Project, openTimer: Bool = true) {
-        guard let modelContext else { return }
-        let wasRunning = ongoingActivity != nil
-        ongoingActivity?.stop()
-
-        let newActivity = ActivityEvent(
-            title: project.name,
-            category: project.category,
-            startAt: Date(),
-            projectId: project.id
-        )
-        modelContext.insert(newActivity)
-        save()
-        loadTodaysActivities()
-        shouldShowFullScreenTimer = openTimer
-
-        if wasRunning { showToast(category: project.category, text: "Switched to \(project.name)") }
     }
 
     /// Attach (or detach) a project to an activity; attaching inherits the project's category.

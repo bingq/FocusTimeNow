@@ -212,6 +212,7 @@ struct EditGoalView: View {
         }
         .navigationTitle(goal == nil ? "New goal" : "Edit goal")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") { save() }
@@ -346,6 +347,7 @@ struct EditProjectView: View {
         }
         .navigationTitle(project == nil ? "New project" : "Edit project")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") { save() }

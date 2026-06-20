@@ -47,8 +47,7 @@ struct TimelineView: View {
 
                 StartArea(viewModel: viewModel,
                           onTapCategory: { viewModel.startActivity(category: $0) },
-                          onHoldCategory: { sheetMode = .start(category: $0) },
-                          onTapProject: { viewModel.startProject($0) })
+                          onHoldCategory: { sheetMode = .start(category: $0) })
             }
 
             if let toast = viewModel.toast {
@@ -278,8 +277,11 @@ private struct ActivityListSection: View {
                 ForEach(entries) { entry in
                     switch entry {
                     case .activity(let a):
+                        let proj = viewModel.project(for: a)
                         SwipeRow(activity: a,
-                                 project: viewModel.project(for: a),
+                                 project: proj,
+                                 goalName: proj.flatMap { viewModel.goalName(for: $0) },
+                                 goalColor: proj.flatMap { viewModel.goalColor(for: $0) },
                                  onTap: { onEdit(a) },
                                  onRepeat: { viewModel.startActivity(category: a.category) },
                                  onDelete: { viewModel.deleteActivity(a) })
@@ -334,6 +336,8 @@ private struct GapRow: View {
 private struct SwipeRow: View {
     let activity: ActivityEvent
     let project: Project?
+    let goalName: String?
+    let goalColor: Color?
     let onTap: () -> Void
     let onRepeat: () -> Void
     let onDelete: () -> Void
@@ -346,6 +350,7 @@ private struct SwipeRow: View {
 
     var body: some View {
         let cat = ActivityCategory.category(for: activity.category)
+        let title = project?.name ?? (activity.title.isEmpty ? cat.name : activity.title)
         let dx = max(-maxReveal, min(maxReveal, offset + drag))
 
         ZStack {
@@ -367,14 +372,14 @@ private struct SwipeRow: View {
                 RoundedRectangle(cornerRadius: 5).fill(cat.color)
                     .frame(width: 9, height: 36)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(activity.title.isEmpty ? cat.name : activity.title)
+                    Text(title)
                         .font(.system(size: 15, weight: .semibold)).foregroundStyle(Theme.ink)
                     Text("\(activity.timeRange) · \(cat.name)")
                         .font(.system(size: 12)).foregroundStyle(Theme.ink2)
-                    if let project {
+                    if let goalName {
                         HStack(spacing: 5) {
-                            Circle().fill(cat.color).frame(width: 5, height: 5)
-                            Text(project.name).font(.system(size: 11, weight: .medium)).foregroundStyle(Theme.ink2)
+                            Circle().fill(goalColor ?? cat.color).frame(width: 5, height: 5)
+                            Text(goalName).font(.system(size: 11, weight: .medium)).foregroundStyle(Theme.ink2)
                         }
                     }
                 }
@@ -413,49 +418,15 @@ private struct StartArea: View {
     let viewModel: TimelineViewModel
     let onTapCategory: (String) -> Void
     let onHoldCategory: (String) -> Void
-    let onTapProject: (Project) -> Void
-
-    @State private var showAll = false
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 3)
 
-    private var hasProjects: Bool { !viewModel.quickStartProjects.isEmpty }
     private var running: Bool { viewModel.ongoingActivity != nil }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             header
-
-            if hasProjects {
-                VStack(spacing: 8) {
-                    ForEach(viewModel.quickStartProjects) { project in
-                        ProjectStartRow(
-                            project: project,
-                            goalName: viewModel.goalName(for: project),
-                            goalColor: viewModel.goalColor(for: project),
-                            allTime: viewModel.allTimeSeconds(for: project),
-                            onTap: { onTapProject(project) }
-                        )
-                    }
-                }
-
-                Button { withAnimation { showAll.toggle() } } label: {
-                    HStack(spacing: 5) {
-                        Text("All categories & projects")
-                        Image(systemName: showAll ? "chevron.up" : "chevron.down")
-                    }
-                    .font(.system(size: 13, weight: .medium)).foregroundStyle(Theme.ink2)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .background(Theme.card)
-                    .clipShape(RoundedRectangle(cornerRadius: Theme.radiusSm, style: .continuous))
-                }
-                .buttonStyle(.plain)
-            }
-
-            if !hasProjects || showAll {
-                categoryGrid
-            }
+            categoryGrid
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
@@ -465,9 +436,7 @@ private struct StartArea: View {
 
     private var header: some View {
         Group {
-            if hasProjects {
-                Text("Start what you usually do →")
-            } else if running {
+            if running {
                 (Text("Tap to ") + Text("switch instantly").foregroundColor(ActivityCategory.getCategoryColor(for: "Learning")) + Text(" →"))
             } else {
                 Text("Start something →")
@@ -485,56 +454,6 @@ private struct StartArea: View {
                              onHold: { onHoldCategory(cat.name) })
             }
         }
-    }
-}
-
-private struct ProjectStartRow: View {
-    let project: Project
-    let goalName: String?
-    let goalColor: Color?
-    let allTime: Int
-    let onTap: () -> Void
-
-    var body: some View {
-        let catColor = ActivityCategory.getCategoryColor(for: project.category)
-        Button(action: onTap) {
-            HStack(spacing: 12) {
-                Image(systemName: ActivityCategory.getCategoryIcon(for: project.category))
-                    .font(.system(size: 17))
-                    .foregroundStyle(catColor)
-                    .frame(width: 38, height: 38)
-                    .background(catColor.tinted(0.18))
-                    .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(project.name)
-                        .font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.ink)
-                        .lineLimit(1)
-                    if let goalName {
-                        HStack(spacing: 5) {
-                            Circle().fill(goalColor ?? catColor).frame(width: 5, height: 5)
-                            Text(goalName).font(.system(size: 11)).foregroundStyle(Theme.ink2)
-                        }
-                    } else {
-                        Text("\(project.category) · no goal").font(.system(size: 11)).foregroundStyle(Theme.ink3)
-                    }
-                }
-                Spacer()
-                if allTime > 0 {
-                    Text(TimeFmt.duration(seconds: allTime))
-                        .font(.system(size: 12, weight: .medium)).monospacedDigit()
-                        .foregroundStyle(Theme.ink3)
-                }
-                Image(systemName: "play.fill")
-                    .font(.system(size: 12)).foregroundStyle(.white)
-                    .frame(width: 30, height: 30)
-                    .background(Theme.ink)
-                    .clipShape(Circle())
-            }
-            .padding(.horizontal, 12).padding(.vertical, 10)
-            .background(Theme.card)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        }
-        .buttonStyle(.plain)
     }
 }
 
@@ -556,20 +475,14 @@ private struct CategoryChip: View {
                 .font(.system(size: 17))
                 .foregroundStyle(cat.color)
                 .frame(width: 30, height: 30)
-                .background(cat.color.tinted(0.18))
-                .clipShape(Circle())
             Text(cat.name)
                 .font(.system(size: 12.5, weight: .semibold))
                 .foregroundStyle(Theme.ink)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .background(Theme.card)
+        .background(cat.color.tinted(0.16))
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(Theme.hair, lineWidth: 1)
-        )
         .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .onTapGesture { onTap() }
         .onLongPressGesture(minimumDuration: Theme.longPress) {
