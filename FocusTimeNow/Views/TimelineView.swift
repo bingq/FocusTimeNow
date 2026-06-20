@@ -9,6 +9,7 @@ struct TimelineView: View {
     @State private var sheetMode: SheetMode?
     @State private var showCoach = false
     @State private var linkTarget: LinkTarget?
+    @State private var didLoad = false
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -44,6 +45,7 @@ struct TimelineView: View {
                     .padding(.top, 8)
                     .padding(.bottom, 12)
                 }
+                .id(didLoad)
 
                 StartArea(viewModel: viewModel,
                           onTapCategory: { viewModel.startActivity(category: $0) },
@@ -59,6 +61,10 @@ struct TimelineView: View {
         .onAppear {
             viewModel.setModelContext(modelContext)
             showCoach = !viewModel.coachDismissed
+            // Flip the ScrollView's id once data is loaded so it rebuilds and
+            // remeasures its content height, making it scrollable on first
+            // launch instead of only after a tab switch (bingq/FocusTimeNow#15).
+            didLoad = true
         }
         .onChange(of: viewModel.toast?.id) { _, _ in
             guard viewModel.toast != nil else { return }
